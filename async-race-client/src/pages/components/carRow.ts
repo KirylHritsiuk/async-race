@@ -1,27 +1,29 @@
+import { ICarBody, ICarResponse } from '../../restApi/template';
 import {Car} from './car';
-export class CarRow {
+export  class CarRow {
     private container: HTMLElement;
     private car: Car;
     static TextObject = {
         Row: 'row_container',
         Options: 'car_options',
-        Mark: 'Mark',
         Controls: 'car_controls',
         Road: 'car__road',
         Finish: 'car_finish',
     }
-    constructor(private id: string) {
+    mark: string;
+    constructor(private data: ICarResponse) {
         this.container = document.createElement('div');
         this.container.className = CarRow.TextObject.Row;
-        this.id = id;
-        this.car = new Car(this.id);
+        this.data = data,
+        this.mark = data.name;
+        this.car = new Car(this.data);
     }
-    private createCarOptions(className: string, mark:string) {
+    private createCarOptions(className: string) {
         const controls = document.createElement('div');
         controls.className = className;
         controls.innerHTML = `<button class="button btn-1" type="button">SELECT</button>
                               <button class="button btn-2" type="reset">REMOVE</button>
-                              <h6 class="mark">${mark}</h6>`
+                              <h6 class="mark">${this.mark}</h6>`
         return controls;
     }
     private createCarControls(className: string) {
@@ -94,7 +96,7 @@ export class CarRow {
     }
     render () {
         const [options, controls, finish, road, car] = [
-            this.createCarOptions(CarRow.TextObject.Options, CarRow.TextObject.Mark),
+            this.createCarOptions(CarRow.TextObject.Options),
             this.createCarControls(CarRow.TextObject.Controls),
             this.createCarFinish(CarRow.TextObject.Finish),
             this.createCarRoad(CarRow.TextObject.Road),
@@ -106,4 +108,4 @@ export class CarRow {
         this.container.append(road);
         return this.container;
     } 
-} 
+}

@@ -1,3 +1,5 @@
+import { Api } from "../../restApi/template";
+
 export abstract class Page {
     protected container: HTMLElement;
     static TextObject = {}
@@ -13,7 +15,7 @@ export abstract class Page {
         const container = document.createElement('div');
         container.className = initClass;
         container.innerHTML = `<h4 class="title">${title}</h4>
-        <h4 id="carsCount" class="title">(${count})</h4>`
+        <h4 class="title">(<span id="count">${count}</span>)</h4>`
         return container;
     }
     protected createPagination(initClass: string , page: string) {
@@ -30,7 +32,8 @@ export abstract class Page {
             </div>`
         return pagination;
     }
-    render (){
+    async render (){
         return this.container;
     }
+    async renderRow (){}
 }

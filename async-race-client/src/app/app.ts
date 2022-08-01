@@ -1,8 +1,8 @@
 import { Page } from '../pages/components/templatePage';
 import { Garage } from '../pages/garage/garage';
 import { Winners } from '../pages/winners/winners';
-import { addRows } from './logic/addRow';
 import { Header } from '../pages/header/header';
+import { Buttons } from '../pages/components/from';
 
 export const enum PageId {
     Header = 'header',
@@ -16,8 +16,8 @@ export class App {
     private GaragePage: Garage;
     private WinnersPage: Winners;
     static pageContainer: HTMLElement;
-
-    static renderNewPage(idPage: string) {  
+    
+    static async renderNewPage(idPage: string) {  
         const pageContainer = document.querySelector('#page')
         pageContainer.innerHTML = '';
         let page: Page | null = null;
@@ -29,10 +29,10 @@ export class App {
             page = new Winners(idPage)
         } 
         if (page) {
-            const pageHTML = page.render();
+            const pageHTML = await page.render();
             pageContainer.append(pageHTML);
-            addRows()
-        }
+            await page.renderRow()
+        }  
     }
     constructor() {
         this.header = new Header(PageId.Header, PageId.Header);
@@ -42,18 +42,22 @@ export class App {
         App.container.className = 'page container';
         App.container.id = 'page';
     }
-    private routeChange() {
-        window.addEventListener('hashchange', () => {
+     private  routeChange() {
+        window.addEventListener('hashchange', async() => {
             const hash = window.location.hash.slice(1);
-            App.renderNewPage(hash);
+            await App.renderNewPage(hash);
         })
     }
-    run() {
-        const headerV2HTML = this.header.render();
-        document.body.append(headerV2HTML);
+   async run() {
+        const headerHTML = this.header.render();
+        document.body.append(headerHTML);
         document.body.append(App.container);
-        App.renderNewPage(PageId.Garage);
+        await App.renderNewPage(PageId.Garage);
         this.routeChange()
-        addRows()
+        const btn = document.querySelector("#createBtn")!;
+        const btnGen = document.querySelector("#generateBtn")!;
+        btn.addEventListener('click', Buttons.create)
+        btnGen.addEventListener('click', Buttons.generate)
+        
     }
 }

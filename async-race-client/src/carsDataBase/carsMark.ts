@@ -1,8 +1,8 @@
-export interface ICarModel {
+export interface ICarModelsData {
     mark: string,
     model: string[]
 }
-export const carsMark: ICarModel[] = [
+export const modelsBase: ICarModelsData[] = [
     {
         mark:'Tesla',
         model: ['Roadster','Model S','Model X','3','Y','Cybertruck','Roadster']},

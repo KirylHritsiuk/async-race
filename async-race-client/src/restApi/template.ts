@@ -16,7 +16,7 @@ export interface IQueryParams {
     key: string,
     value: string,
 }
-export abstract class Api {
+export abstract class Api<T> {
     protected url: string;
     protected totalCount: string;
 
@@ -31,29 +31,25 @@ export abstract class Api {
     static generateQueryString(queryParams: IQueryParams[] = []): string {
         return queryParams.length ? `${queryParams.map( el => el.key + '=' + el.value).join('&')}` : '';
     };
-    protected async getAll(queryParams: IQueryParams[]){
+    async getPage(queryParams: IQueryParams[]){
+        try {
         const response = await fetch(`
-            ${this.url}
-            ${this.path}?
-            ${Api.generateQueryString(queryParams)}`
+            ${this.url}${this.path}?${Api.generateQueryString(queryParams)}`
         )
         const data: ICarResponse[] = await response.json();
         const count = response.headers.get(this.totalCount);
         return { data, count }
+        } catch (error) {
+            console.error(error, this.url, this.path)
+        }
     }
-    protected async getOnce(body: ICarBody | IWinBody){
-        const response = await fetch(`${this.url}${this.path}`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body),
-        })
+ 
+    async getAllOrOnce(id: string = ''){
+        const response = await fetch(`${this.url}${this.path}/${id}`)
         const car: ICarResponse | IWinResponse = await response.json();
         return car
-
     }
-    protected async create(body: ICarBody | IWinBody){
+    async create(body: ICarBody | IWinBody): Promise<T> {
         const response = await fetch(`${this.url}${this.path}`,{
             method: 'POST',
             headers: {
@@ -61,10 +57,10 @@ export abstract class Api {
             },
             body: JSON.stringify(body),
         })
-        const car: ICarResponse | IWinResponse = await response.json();
+        const car: T = await response.json();
         return car 
     };
-    protected async update(id: string, body: ICarBody | IWinBody){
+    async update(id: string, body: ICarBody | IWinBody){
         const response = await fetch(`${this.url}${this.path}/${id}`, {
             method: 'PUT',
             headers: {
@@ -75,7 +71,7 @@ export abstract class Api {
         const car: ICarResponse | IWinResponse  = await response.json();
         return car
     }
-    protected async delete(id: string){
+    async delete(id: string){
         const response = await fetch(`${this.url}${this.path}}/${id}`,{
             method: 'DELETE',
         })

@@ -13,7 +13,7 @@ export class Winners extends Page {
         super(id);
         // this.container.className = '';
     }
-    render() {
+    async render() {
         const [title, pagination] = [
             this.createTitle(Winners.TextObject.TitleClass,
                              Winners.TextObject.Title, 

@@ -1,11 +1,14 @@
+import { ICarBody, ICarResponse } from "../../restApi/template";
+
 export class Car {
     static TextObject = {
-        carClass: 'car',
-        carId: 'testID'
+        carClass: 'car'
     }
-    constructor(private id: string, private color: string = '#fff', private height: string = '1.5em', private weight: string = '4em') {
-        this.id = id;
-        this.color = color;
+    id: string;
+    color: string;
+    constructor(private data: ICarResponse, private height: string = '1.5em', private weight: string = '4em') {
+        this.id = data.id.toString();
+        this.color = data.color;
         this.weight = weight;
         this.height = height;
     }
