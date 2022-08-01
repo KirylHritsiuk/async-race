@@ -14,23 +14,26 @@ export  class CarRow {
     constructor(private data: ICarResponse) {
         this.container = document.createElement('div');
         this.container.className = CarRow.TextObject.Row;
-        this.data = data,
+        this.container.id = data.id.toString();
+        this.container.dataset.mark = data.name; 
+        this.data = data;
         this.mark = data.name;
         this.car = new Car(this.data);
+        console.log(this.container.dataset.mark);
     }
     private createCarOptions(className: string) {
         const controls = document.createElement('div');
         controls.className = className;
-        controls.innerHTML = `<button class="button btn-1" type="button">SELECT</button>
-                              <button class="button btn-2" type="reset">REMOVE</button>
+        controls.innerHTML = `<button id="selectCar" class="button btn-1" type="button">SELECT</button>
+                              <button id="removeCar" class="button btn-2" type="button">REMOVE</button>
                               <h6 class="mark">${this.mark}</h6>`
         return controls;
     }
     private createCarControls(className: string) {
         const controls = document.createElement('div');
         controls.className = className;
-        controls.innerHTML = `<button class="button btn-1" type="button">A</button>
-                              <button class="button btn-2" type="button">B</button>`
+        controls.innerHTML = `<button id="startCar" class="button btn-1" type="button">A</button>
+                              <button id="stopCar" class="button btn-2" type="button">B</button>`
         return controls;
     }
     private createCarRoad(className: string) {

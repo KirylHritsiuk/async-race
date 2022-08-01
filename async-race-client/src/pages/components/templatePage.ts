@@ -27,8 +27,8 @@ export abstract class Page {
             </div>
             <div class="pagination_rows"></div>
             <div class="pagination_controls">
-                <button class="button btn-1" type="button" disabled>PREV</button>
-                <button class="button btn-1" type="button">NEXT</button>
+                <button id="prev" class="button btn-1" type="button" disabled>PREV</button>
+                <button id="next" class="button btn-1" type="button">NEXT</button>
             </div>`
         return pagination;
     }

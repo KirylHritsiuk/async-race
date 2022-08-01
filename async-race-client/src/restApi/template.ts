@@ -20,9 +20,6 @@ export abstract class Api<T> {
     protected url: string;
     protected totalCount: string;
 
-    // static MainData = {
-    //     url: ,
-    // }
     constructor(protected path: string) {
         this.url = 'http://localhost:3000',
         this.totalCount = 'X-Total-Count',
@@ -44,9 +41,9 @@ export abstract class Api<T> {
         }
     }
  
-    async getAllOrOnce(id: string = ''){
+    async getAllOrOnce(id: string = ''): Promise<T>{
         const response = await fetch(`${this.url}${this.path}/${id}`)
-        const car: ICarResponse | IWinResponse = await response.json();
+        const car: T = await response.json();
         return car
     }
     async create(body: ICarBody | IWinBody): Promise<T> {
@@ -72,7 +69,7 @@ export abstract class Api<T> {
         return car
     }
     async delete(id: string){
-        const response = await fetch(`${this.url}${this.path}}/${id}`,{
+        const response = await fetch(`${this.url}${this.path}/${id.trim()}`,{
             method: 'DELETE',
         })
         const car: ICarResponse | IWinResponse = await response.json();

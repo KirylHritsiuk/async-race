@@ -1,10 +1,10 @@
 import GarageApi from '../../restApi/garage'
 import { ICarBody, ICarResponse, IWinResponse } from '../../restApi/template';
 import { CarRow } from './carRow';
-import { incrCount } from '../components/count'
-import{ randModel } from '../components/randomCarName';
-import{ randIndex } from '../components/randomCarName';
-import { randomColor } from '../components/randomColor';
+import { updateTitle } from './updateTitle'
+import { randModel } from './randomCarName';
+import { randIndex } from './randomCarName';
+import { randomColor } from './randomColor';
 export class Buttons {
    static nameUpdate: HTMLInputElement = document.querySelector("#updateName")!;
    static colorUpdate: HTMLInputElement = document.querySelector("#updateColor")!;
@@ -13,7 +13,7 @@ export class Buttons {
         const container: HTMLElement = document.querySelector('.pagination_rows');
         const nameCreate: HTMLInputElement = document.querySelector("#createName");
         const colorCreate: HTMLInputElement = document.querySelector("#createColor");
-        incrCount(1)
+        updateTitle(1)
         const data: ICarBody = {
             name: nameCreate.value,
             color: colorCreate.value,
@@ -27,10 +27,10 @@ export class Buttons {
     }
     static async generate() {
         const container: HTMLElement = document.querySelector('.pagination_rows');
-        incrCount(100)
-        for(let i = 0; i < 99; i++){
+        updateTitle(100)
+        for(let i = 0; i < 100; i++){
             const data: ICarBody = {
-                name: randModel(randIndex()) ,
+                name: randModel(randIndex()),
                 color: randomColor()
             }
             const body: ICarResponse =  await GarageApi.create(data)
@@ -40,8 +40,29 @@ export class Buttons {
             }
         }
     }
-    update(){}
-    race(){}
-    reset(){}
+    static async update(){
+       const [name, color, btn] =  [
+        <HTMLInputElement> document.querySelector('#updateName'),
+        <HTMLInputElement>document.querySelector('#updateColor'),
+        <HTMLButtonElement>document.querySelector('#updateBtn')]
+        const body = {
+            name: name.value,
+            color: color.value,
+        }
+        await GarageApi.update(btn.value, body);
+        btn.disabled = true;
+        name.disabled = true;
+        name.value = '';
+        const data: ICarResponse =  await GarageApi.getAllOrOnce(btn.value)
+        const container = document.getElementById(`${btn.value}`);
+        const createRow = new CarRow(data);
+   
+        console.log(container)
+    }
+    static async race(){}
+    static async reset(){}
+    static async delete(id: string){
+        await GarageApi.delete(id);
+    }
 }
 

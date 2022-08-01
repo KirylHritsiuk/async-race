@@ -2,7 +2,8 @@ import { Page } from '../pages/components/templatePage';
 import { Garage } from '../pages/garage/garage';
 import { Winners } from '../pages/winners/winners';
 import { Header } from '../pages/header/header';
-import { Buttons } from '../pages/components/from';
+import { Buttons } from '../pages/components/buttons';
+import { pagListener } from '../pages/components/listeners/paginationListener';
 
 export const enum PageId {
     Header = 'header',
@@ -55,9 +56,18 @@ export class App {
         await App.renderNewPage(PageId.Garage);
         this.routeChange()
         const btn = document.querySelector("#createBtn")!;
+        const btnUpdate = document.querySelector("#updateBtn")!;
         const btnGen = document.querySelector("#generateBtn")!;
-        btn.addEventListener('click', Buttons.create)
-        btnGen.addEventListener('click', Buttons.generate)
+        const btnRemove = document.querySelector("#removeCar")!;
+        const btnSelect = document.querySelector("#selectCar")!;
+        const btnStart = document.querySelector("#startCar")!;
+        const btnStop = document.querySelector("#stopCar")!;
+        const btnNext = document.querySelector("#next")!;
+        const btnPrev = document.querySelector("#prev")!;
+        btn.addEventListener('click', Buttons.create);
+        btnGen.addEventListener('click', Buttons.generate);
+        btnUpdate.addEventListener('click', Buttons.update);
+        document.body.addEventListener('click', (e) => {pagListener(e)})
         
     }
 }

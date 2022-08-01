@@ -5,7 +5,8 @@ export interface ICarModelsData {
 export const modelsBase: ICarModelsData[] = [
     {
         mark:'Tesla',
-        model: ['Roadster','Model S','Model X','3','Y','Cybertruck','Roadster']},
+        model: ['Roadster','Model S','Model X','3','Y','Cybertruck','Roadster']
+    },
     {
         mark:'Opel',
         model: ['Mokka','Corsa',' Astra','Insignia','Vivaro','Zafira','Movano','Combo', 'Crossland', 'Karl']

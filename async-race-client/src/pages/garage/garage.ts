@@ -2,7 +2,7 @@ import { Page } from '../components/templatePage';
 import GarageApi  from '../../restApi/garage'
 import { Api, ICarResponse, IQueryParams } from '../../restApi/template';
 import { CarRow } from '../components/carRow';
-import { Buttons } from "../../pages/components/from"
+import { Buttons } from "../components/buttons"
 export const enum  urlData {
     baseUrl = 'http://localhost:3000',
     totalCount = 'X-Total-Count',
@@ -54,9 +54,9 @@ export class Garage extends Page {
         <button id="createBtn" class="button btn-1" type="button">CREATE</button>
     </div>
     <div id="update">
-        <input id="updateName" class="form__input" type="text" placeholder="Select mark car on page">
+        <input id="updateName" class="form__input" type="text" placeholder="Select mark car on page" disabled>
         <input id="updateColor" class="form__color" type="color">
-        <button id="updateBtn" class="button btn-1" type="submit">UPDATE</button>
+        <button id="updateBtn" class="button btn-1" type="button" disabled>UPDATE</button>
     </div>
     <div>
         <button class="button btn-1" type="button" value="RACE">RACE</button>

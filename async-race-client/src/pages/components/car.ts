@@ -4,10 +4,8 @@ export class Car {
     static TextObject = {
         carClass: 'car'
     }
-    id: string;
     color: string;
     constructor(private data: ICarResponse, private height: string = '1.5em', private weight: string = '4em') {
-        this.id = data.id.toString();
         this.color = data.color;
         this.weight = weight;
         this.height = height;
@@ -15,7 +13,6 @@ export class Car {
     create() {
         const container = document.createElement('div');
         container.className = Car.TextObject.carClass;
-        container.id = this.id;
         container.innerHTML = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="${this.weight}" height="${this.height}" viewBox="0 0 1280.000000 640.000000"
  preserveAspectRatio="xMidYMid meet">
