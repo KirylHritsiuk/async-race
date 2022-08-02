@@ -12,11 +12,11 @@ export const enum  urlData {
     page = '_page',
     limit = '_limit',
 }
-const enum garagePagData {
+export const enum garagePagData {
     page = '1',
     limit = '7' 
 }
-const obj: IQueryParams[] = [
+export const obj: IQueryParams[] = [
     {
         key: urlData.page,
         value: garagePagData.page
@@ -59,8 +59,8 @@ export class Garage extends Page {
         <button id="updateBtn" class="button btn-1" type="button" disabled>UPDATE</button>
     </div>
     <div>
-        <button class="button btn-1" type="button" value="RACE">RACE</button>
-        <button class="button btn-2" type="reset" value="RESET">RESET</button>
+        <button id="raceBtn" class="button btn-1" type="button" value="RACE">RACE</button>
+        <button id="resetBtn"class="button btn-2" type="reset" value="RESET">RESET</button>
         <button id="generateBtn"class="button btn-1" type="button">GENERATE CARS</button>
     </div>`
         return form;
@@ -82,10 +82,24 @@ export class Garage extends Page {
     }
     async renderRow () {
         const container: HTMLElement = document.querySelector('.pagination_rows')!;
-        const response = await this.api.getPage(obj)
+        const response = await this.api.getPage(getPageFromLocalStorage(obj))
         for(let i = 0; i < response.data.length; i++){
-        const carRow = new CarRow(response.data[i]);
-        container.append(carRow.render());
-    } 
+            const carRow = new CarRow(response.data[i]);
+            container.append(carRow.render());
+        } 
     }
+}
+
+function getPageFromLocalStorage(obj:IQueryParams[]): IQueryParams[]{
+    if(localStorage.getItem('page')){
+        console.log('if get');
+        const data = localStorage.getItem('page')
+        return JSON.parse(data);
+    }
+    else {
+        localStorage.setItem('page', JSON.stringify(obj));
+        console.log('set');
+        return obj
+    }
+
 }

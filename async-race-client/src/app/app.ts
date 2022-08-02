@@ -4,7 +4,9 @@ import { Winners } from '../pages/winners/winners';
 import { Header } from '../pages/header/header';
 import { Buttons } from '../pages/components/buttons';
 import { pagListener } from '../pages/components/listeners/paginationListener';
-
+import { easeInOut } from '../pages/components/animationCar'
+const duration = 1000;  //** заменить 
+const distance = 1100; //** заменить 
 export const enum PageId {
     Header = 'header',
     Garage = 'garage',
@@ -58,16 +60,15 @@ export class App {
         const btn = document.querySelector("#createBtn")!;
         const btnUpdate = document.querySelector("#updateBtn")!;
         const btnGen = document.querySelector("#generateBtn")!;
-        const btnRemove = document.querySelector("#removeCar")!;
-        const btnSelect = document.querySelector("#selectCar")!;
-        const btnStart = document.querySelector("#startCar")!;
-        const btnStop = document.querySelector("#stopCar")!;
-        const btnNext = document.querySelector("#next")!;
-        const btnPrev = document.querySelector("#prev")!;
+        const btnRace = document.querySelector("#raceBtn")!;
+        const car = <HTMLCollection>document.getElementsByClassName('car')!
         btn.addEventListener('click', Buttons.create);
         btnGen.addEventListener('click', Buttons.generate);
         btnUpdate.addEventListener('click', Buttons.update);
-        document.body.addEventListener('click', (e) => {pagListener(e)})
+        btnRace.addEventListener('click', ()=>{
+          
+        });
+        // document.body.addEventListener('click', (e) => {pagListener(e)})
         
     }
 }

@@ -1,8 +1,8 @@
 import { ICarBody, ICarResponse } from '../../restApi/template';
-import {Car} from './car';
+import { GarageCar } from './garageCar';
 export  class CarRow {
     private container: HTMLElement;
-    private car: Car;
+    private car: GarageCar;
     static TextObject = {
         Row: 'row_container',
         Options: 'car_options',
@@ -18,7 +18,7 @@ export  class CarRow {
         this.container.dataset.mark = data.name; 
         this.data = data;
         this.mark = data.name;
-        this.car = new Car(this.data);
+        this.car = new GarageCar(this.data);
         console.log(this.container.dataset.mark);
     }
     private createCarOptions(className: string) {

@@ -1,19 +1,23 @@
-import { ICarBody, ICarResponse } from "../../restApi/template";
-
-export class Car {
-    static TextObject = {
-        carClass: 'car'
+import { ICarResponse } from "../../restApi/template";
+export abstract class Car {
+    protected container: HTMLDivElement
+    static MainClass = {
+        className: 'car'
     }
-    color: string;
-    constructor(private data: ICarResponse, private height: string = '1.5em', private weight: string = '4em') {
-        this.color = data.color;
-        this.weight = weight;
-        this.height = height;
+    protected color: string
+    constructor(
+        protected data: ICarResponse, 
+        protected height: string, 
+        protected weight: string) {
+            this.color = data.color;
+            this.weight = weight;
+            this.height = height;
+            this.container = document.createElement('div');
     }
-    create() {
-        const container = document.createElement('div');
-        container.className = Car.TextObject.carClass;
-        container.innerHTML = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+    create(){
+        this.container.style.left = '50px';
+        this.container.className = Car.MainClass.className;
+        this.container.innerHTML = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="${this.weight}" height="${this.height}" viewBox="0 0 1280.000000 640.000000"
  preserveAspectRatio="xMidYMid meet">
 <metadata>
@@ -108,6 +112,6 @@ l26 0 -7 123 c-10 179 -15 207 -36 207 -10 0 -63 -48 -119 -107z"/>
 130 22 193 51 l64 29 -19 23 c-65 82 -198 227 -209 227 -7 0 -15 -4 -19 -9z"/>
 </g>
 </svg>`
-        return container;
+        return  this.container;
     }
 }
