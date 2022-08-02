@@ -16,13 +16,22 @@ export interface IQueryParams {
     key: string,
     value: string,
 }
+export const enum  urlData {
+    baseUrl = 'http://localhost:3000',
+    totalCount = 'X-Total-Count',
+    garage = '/garage',
+    engine = '/engine',
+    winners = '/winners',
+    page = '_page',
+    limit = '_limit',
+}
 export abstract class Api<T> {
     protected url: string;
     protected totalCount: string;
 
     constructor(protected path: string) {
-        this.url = 'http://localhost:3000',
-        this.totalCount = 'X-Total-Count',
+        this.url = urlData.baseUrl,
+        this.totalCount = urlData.totalCount,
         this.path = path
     }
     static generateQueryString(queryParams: IQueryParams[] = []): string {
@@ -57,7 +66,7 @@ export abstract class Api<T> {
         const car: T = await response.json();
         return car 
     };
-    async update(id: string, body: ICarBody | IWinBody){
+    async update(id: string, body: ICarBody | IWinBody): Promise<T> {
         const response = await fetch(`${this.url}${this.path}/${id}`, {
             method: 'PUT',
             headers: {
@@ -65,14 +74,14 @@ export abstract class Api<T> {
             },
             body: JSON.stringify(body), 
         })
-        const car: ICarResponse | IWinResponse  = await response.json();
+        const car: T = await response.json();
         return car
     }
-    async delete(id: string){
+    async delete(id: string): Promise<T> {
         const response = await fetch(`${this.url}${this.path}/${id.trim()}`,{
             method: 'DELETE',
         })
-        const car: ICarResponse | IWinResponse = await response.json();
+        const car: T = await response.json();
         return car
     }
 }
