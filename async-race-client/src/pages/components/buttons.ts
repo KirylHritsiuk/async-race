@@ -53,10 +53,11 @@ export class Buttons {
         btn.disabled = true;
         name.disabled = true;
         name.value = '';
-        const data: ICarResponse =  await GarageApi.getOnce(btn.value)
-        const container = document.getElementById(`${btn.value}`);
+        const data: ICarResponse =  await GarageApi.getOnce(btn.value);
+        const container: HTMLElement = document.querySelector('.pagination_rows');
+        const row = document.getElementById(`${btn.value}`);
         const createRow = new CarRow(data);
-   
+        const node = container.replaceChild(createRow.render(), row )
         console.log(container)
     }
     static async race(){}
