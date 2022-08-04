@@ -1,3 +1,5 @@
+import { requestId } from "../pages/components/animationCar";
+
 export interface ICarBody {
     name: string,
     color: string,
@@ -93,7 +95,8 @@ export abstract class Api<T> {
             const car: T = await response.json();
             return car
         }catch(err) {
-            console.error(err, this.url, this.path)
+            console.error(err, this.url, this.path);
+            window.cancelAnimationFrame(requestId)
         }
     }
     async delete(id: string): Promise<T> {
