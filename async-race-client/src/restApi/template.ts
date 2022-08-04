@@ -24,6 +24,8 @@ export const enum  urlData {
     winners = '/winners',
     page = '_page',
     limit = '_limit',
+    id = 'id',
+    status = 'status',
 }
 export abstract class Api<T> {
     protected url: string;
@@ -41,7 +43,8 @@ export abstract class Api<T> {
         try {
         const response = await fetch(`
             ${this.url}${this.path}?${Api.generateQueryString(queryParams)}`
-        )
+            )
+            console.log('get page')
         const data: ICarResponse[] = await response.json();
         const count = response.headers.get(this.totalCount);
         return { data, count }
@@ -50,9 +53,14 @@ export abstract class Api<T> {
         }
     }
  
-    async getAllOrOnce(id: string = ''): Promise<T>{
+    async getAll(id: string = ''): Promise <T[]> { 
         const response = await fetch(`${this.url}${this.path}/${id}`)
-        const car: T = await response.json();
+        const car: T[] = await response.json();
+        return car
+    }
+    async getOnce(id: string = ''): Promise<T> { 
+        const response = await fetch(`${this.url}${this.path}/${id}`)
+        const car: T  = await response.json();
         return car
     }
     async create(body: ICarBody | IWinBody): Promise<T> {
@@ -76,6 +84,17 @@ export abstract class Api<T> {
         })
         const car: T = await response.json();
         return car
+    }
+    async updateStatus(queryParams: IQueryParams[]): Promise<T> {
+        try{
+            const response = await fetch(`${this.url}${this.path}?${Api.generateQueryString(queryParams)}`, {
+                method: 'PATCH',
+            })
+            const car: T = await response.json();
+            return car
+        }catch(err) {
+            console.error(err, this.url, this.path)
+        }
     }
     async delete(id: string): Promise<T> {
         const response = await fetch(`${this.url}${this.path}/${id.trim()}`,{

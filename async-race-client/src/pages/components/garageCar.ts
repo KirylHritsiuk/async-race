@@ -14,25 +14,6 @@ export class GarageCar extends Car {
         weight: string = GarageCar.DataObject.weight) {
       super(data, height, weight)
     }
-    
-    // startAnimation(duration, (progress) => {
-    //     const translate = easeInOut(progress) * distance;
-    //     this.container.style.transform = `translateX(${translate}px)`;
-        
-    // }): typeof startAnimation{
-    //     let startAnimation = 0;
-    //     requestAnimationFrame(function animationCar(time: number){
-    //         if(!startAnimation){
-    //             startAnimation = time;
-    //         }
-    //         const progress = (time - startAnimation) / duration;
-    //         callback(progress);
-            
-    //         if(progress < 1) {
-    //             requestAnimationFrame(animationCar);
-    //         }
-    //     }) 
-    // }
 }
 
 

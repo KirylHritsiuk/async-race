@@ -1,23 +1,22 @@
 import { Api, urlData } from "./template";
 
-export interface IEngineResponse {
+export interface IEngineStartStopResponse {
     velocity: number,
     distance: number
 }
-export interface IEngineSwitcheResponse {
+export interface IEngineSwitchResponse {
     success: boolean;
 }
-export const enum engineStatus {
+export type IEngineResponse = IEngineStartStopResponse | IEngineSwitchResponse
+export const enum engineStatusData {
     started = 'started',
     stopped = 'stopped',
-    drive = 'started'
+    drive = 'drive'
 }
 
 class EngineApi extends Api<IEngineResponse>{
     constructor(path: string){
         super(path)
     }
-    async startStopEngine(){}
-    async switchDriveMode(){}
 }
 export default new EngineApi(urlData.engine);

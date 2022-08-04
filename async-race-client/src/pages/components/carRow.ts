@@ -33,7 +33,7 @@ export  class CarRow {
         const controls = document.createElement('div');
         controls.className = className;
         controls.innerHTML = `<button id="startCar" class="button btn-1" type="button">A</button>
-                              <button id="stopCar" class="button btn-2" type="button">B</button>`
+                              <button id="stopCar" class="button btn-2" type="button" disabled>B</button>`
         return controls;
     }
     private createCarRoad(className: string) {

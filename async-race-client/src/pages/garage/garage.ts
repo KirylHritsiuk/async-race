@@ -41,7 +41,6 @@ export class Garage extends Page {
 
     constructor(id: string) {
         super(id);
-        // this.api = new GarageApi(Garage.TextObject.GaragePath);
         this.api = GarageApi;
     }
     private createGarageForm(initClass: string) {
@@ -59,20 +58,20 @@ export class Garage extends Page {
         <button id="updateBtn" class="button btn-1" type="button" disabled>UPDATE</button>
     </div>
     <div>
-        <button id="raceBtn" class="button btn-1" type="button" value="RACE">RACE</button>
-        <button id="resetBtn"class="button btn-2" type="reset" value="RESET">RESET</button>
+        <button id="raceBtn" class="button btn-1" type="button">RACE</button>
+        <button id="resetBtn"class="button btn-2" type="button" disabled>RESET</button>
         <button id="generateBtn"class="button btn-1" type="button">GENERATE CARS</button>
     </div>`
         return form;
     }
     async render () {
-        const count = (await this.api.getPage(obj)).count;
+        const count = await this.api.getAll();
         const [form, title, pagination] = [
             this.createGarageForm(Garage.TextObject.GarageForm),
             this.createTitle(
                 Garage.TextObject.GarageTitleClass,
                 Garage.TextObject.Title,
-                count),
+                count.length.toString()),
             this.createPagination(Garage.TextObject.GaragePages, garagePagData.page)
         ];
         this.container.append(form);

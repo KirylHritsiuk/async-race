@@ -53,7 +53,7 @@ export class Buttons {
         btn.disabled = true;
         name.disabled = true;
         name.value = '';
-        const data: ICarResponse =  await GarageApi.getAllOrOnce(btn.value)
+        const data: ICarResponse =  await GarageApi.getOnce(btn.value)
         const container = document.getElementById(`${btn.value}`);
         const createRow = new CarRow(data);
    

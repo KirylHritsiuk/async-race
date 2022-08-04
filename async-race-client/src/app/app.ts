@@ -4,7 +4,7 @@ import { Winners } from '../pages/winners/winners';
 import { Header } from '../pages/header/header';
 import { Buttons } from '../pages/components/buttons';
 import { pagListener } from '../pages/components/listeners/paginationListener';
-import { easeInOut } from '../pages/components/animationCar'
+import { easeInOut, getDistance, getTime } from '../pages/components/animationCar'
 const duration = 1000;  //** заменить 
 const distance = 1100; //** заменить 
 export const enum PageId {
@@ -61,14 +61,32 @@ export class App {
         const btnUpdate = document.querySelector("#updateBtn")!;
         const btnGen = document.querySelector("#generateBtn")!;
         const btnRace = document.querySelector("#raceBtn")!;
+        const btnStart = document.querySelector("#startCar")!;
+        const car1 = document.querySelector(".car")!;
         const car = <HTMLCollection>document.getElementsByClassName('car')!
         btn.addEventListener('click', Buttons.create);
         btnGen.addEventListener('click', Buttons.generate);
         btnUpdate.addEventListener('click', Buttons.update);
-        btnRace.addEventListener('click', ()=>{
-          
-        });
-        // document.body.addEventListener('click', (e) => {pagListener(e)})
+        // btnRace.addEventListener('click', async ()=>{
+        //     for(let i = 0; i < car.length; i++){
+        //         const id = (<HTMLElement>(car[i])).closest('.row_container').id,
+        //             carModel = <HTMLElement>(car[i]),
+        //         time = await getTime(id);
+        //     //    startAnimation(carModel, time + 500);
+        //     }
+        // });
+        // btnStart.addEventListener('click', async ()=>{
+           
+        //         const id = car1.closest('.row_container').id,
+        //             carModel = <HTMLElement>car1,
+        //         time = await getTime(id);
+        //        startAnimation(carModel, time + 500);
+            
+        // });
+
+        // document.body.addEventListener('click', (e) => {
+        //     console.log("bodyLisner")
+        //     pagListener(e)})
         
     }
 }
