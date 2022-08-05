@@ -1,5 +1,16 @@
 import { requestId } from "../pages/components/animationCar";
 
+export const enum  urlData {
+    baseUrl = 'http://localhost:3000',
+    totalCount = 'X-Total-Count',
+    garage = '/garage',
+    engine = '/engine',
+    winners = '/winners',
+    page = '_page',
+    limit = '_limit',
+    id = 'id',
+    status = 'status',
+}
 export interface ICarBody {
     name: string,
     color: string,
@@ -18,17 +29,6 @@ export interface IQueryParams {
     key: string,
     value: string,
 }
-export const enum  urlData {
-    baseUrl = 'http://localhost:3000',
-    totalCount = 'X-Total-Count',
-    garage = '/garage',
-    engine = '/engine',
-    winners = '/winners',
-    page = '_page',
-    limit = '_limit',
-    id = 'id',
-    status = 'status',
-}
 export abstract class Api<T> {
     protected url: string;
     protected totalCount: string;
@@ -38,44 +38,46 @@ export abstract class Api<T> {
         this.totalCount = urlData.totalCount,
         this.path = path
     }
+
     static generateQueryString(queryParams: IQueryParams[] = []): string {
         return queryParams.length ? `${queryParams.map( el => el.key + '=' + el.value).join('&')}` : '';
     };
-    async getPage(queryParams: IQueryParams[]){
+
+    async getPage(queryParams: IQueryParams[]) {
         try {
-        const response = await fetch(`
-            ${this.url}${this.path}?${Api.generateQueryString(queryParams)}`
-            )
-            console.log('get page')
-        const data: ICarResponse[] = await response.json();
-        const count = response.headers.get(this.totalCount);
-        return { data, count }
+            const response = await fetch(`${this.url}${this.path}?${Api.generateQueryString(queryParams)}`)
+            const data: ICarResponse[] = response.status !== 500 ? await response.json() : {};
+            const count = response.headers.get(this.totalCount);
+            return { data, count }
         } catch (error) {
             console.error(error, this.url, this.path)
         }
-    }
+    };
  
     async getAll(id: string = ''): Promise <T[]> { 
         const response = await fetch(`${this.url}${this.path}/${id}`)
         const car: T[] = await response.json();
-        return car
-    }
+        return car;
+    };
+
     async getOnce(id: string = ''): Promise<T> { 
         const response = await fetch(`${this.url}${this.path}/${id}`)
-        const car: T  = await response.json();
-        return car
+        const car: T  =  response.status !== 404 ? await response.json() : {};
+        return car;
     }
+
     async create(body: ICarBody | IWinBody): Promise<T> {
-        const response = await fetch(`${this.url}${this.path}`,{
+        const response = await fetch(`${this.url}${this.path}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(body),
         })
         const car: T = await response.json();
-        return car 
+        return car; 
     };
+
     async update(id: string, body: ICarBody | IWinBody): Promise<T> {
         const response = await fetch(`${this.url}${this.path}/${id}`, {
             method: 'PUT',
@@ -85,8 +87,9 @@ export abstract class Api<T> {
             body: JSON.stringify(body), 
         })
         const car: T = await response.json();
-        return car
+        return car;
     }
+
     async updateStatus(queryParams: IQueryParams[]): Promise<T> {
         try{
             const response = await fetch(`${this.url}${this.path}?${Api.generateQueryString(queryParams)}`, {
@@ -94,16 +97,14 @@ export abstract class Api<T> {
             })
             const car: T = await response.json();
             return car
-        }catch(err) {
-            console.error(err, this.url, this.path);
+        }catch {
             window.cancelAnimationFrame(requestId)
         }
     }
-    async delete(id: string): Promise<T> {
-        const response = await fetch(`${this.url}${this.path}/${id.trim()}`,{
+
+    async delete(id: string): Promise<void>{
+        await fetch(`${this.url}${this.path}/${id.trim()}`,{
             method: 'DELETE',
         })
-        const car: T = await response.json();
-        return car
     }
 }
