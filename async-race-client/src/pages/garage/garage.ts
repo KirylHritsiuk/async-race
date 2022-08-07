@@ -1,17 +1,9 @@
 import { Page } from '../components/templatePage';
 import GarageApi  from '../../restApi/garage'
-import { Api, ICarResponse, IQueryParams } from '../../restApi/template';
+import { Api, ICarResponse, IQueryParams, urlData } from '../../restApi/template';
 import { CarRow } from '../components/carRow';
 import { Buttons } from "../components/buttons"
-export const enum  urlData {
-    baseUrl = 'http://localhost:3000',
-    totalCount = 'X-Total-Count',
-    garage = '/garage',
-    engine = '/engine',
-    winners = '/winners',
-    page = '_page',
-    limit = '_limit',
-}
+
 export const enum garagePagData {
     page = '1',
     limit = '7' 
@@ -65,18 +57,25 @@ export class Garage extends Page {
         return form;
     }
     async render () {
-        const count = await this.api.getAll();
-        const [form, title, pagination] = [
+        const cars = await this.api.getAll();
+        const [
+            form, 
+            title, 
+            pagination
+        ] = [
             this.createGarageForm(Garage.TextObject.GarageForm),
             this.createTitle(
                 Garage.TextObject.GarageTitleClass,
                 Garage.TextObject.Title,
-                count.length.toString()),
+                cars.length.toString()),
             this.createPagination(Garage.TextObject.GaragePages, garagePagData.page)
         ];
         this.container.append(form);
         this.container.append(title);
         this.container.append(pagination);
+
+        
+       
         return this.container;
     }
     async renderRow () {
@@ -86,6 +85,7 @@ export class Garage extends Page {
             const carRow = new CarRow(response.data[i]);
             container.append(carRow.render());
         } 
+        return container;
     }
 }
 

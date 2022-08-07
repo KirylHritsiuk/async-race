@@ -37,5 +37,7 @@ export abstract class Page {
     async render (){
         return this.container;
     }
-    async renderRow (){}
+    async renderRow (){
+        return this.container
+    }
 }

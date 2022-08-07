@@ -11,7 +11,7 @@ export class Winners extends Page {
     };
     constructor (id: string) {
         super(id);
-        // this.container.className = '';
+        this.container.style.display = 'none';
     }
     async render() {
         const [title, pagination] = [
@@ -23,5 +23,4 @@ export class Winners extends Page {
             this.container.append(pagination);
         return this.container
     }
-
 }
