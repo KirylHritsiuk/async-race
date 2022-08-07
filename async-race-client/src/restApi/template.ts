@@ -1,4 +1,4 @@
-import { requestId } from "../pages/components/animationCar";
+import { engineStatusData } from "./engine";
 
 export const enum  urlData {
     baseUrl = 'http://localhost:3000',
@@ -8,6 +8,8 @@ export const enum  urlData {
     winners = '/winners',
     page = '_page',
     limit = '_limit',
+    sort = '_sort',
+    order = '_order',
     id = 'id',
     status = 'status',
 }
@@ -43,10 +45,10 @@ export abstract class Api<T> {
         return queryParams.length ? `${queryParams.map( el => el.key + '=' + el.value).join('&')}` : '';
     };
 
-    async getPage(queryParams: IQueryParams[]) {
+    async getPage(queryParams: IQueryParams[]): Promise<{data: T[], count: string}> {
         try {
             const response = await fetch(`${this.url}${this.path}?${Api.generateQueryString(queryParams)}`)
-            const data: ICarResponse[] = response.status !== 500 ? await response.json() : {};
+            const data: T[] = response.status !== 500 ? await response.json() : {};
             const count = response.headers.get(this.totalCount);
             return { data, count }
         } catch (error) {
@@ -97,8 +99,21 @@ export abstract class Api<T> {
             })
             const car: T = await response.json();
             return car
-        }catch {
-            window.cancelAnimationFrame(requestId)
+        }catch (err) {
+            console.log(err)
+            // window.cancelAnimationFrame(requestId)
+        }
+    }
+    async drive(id: string)  {
+        try{
+            const response = await fetch(`${this.url}${this.path}?${urlData.id}=${id}&${urlData.status}=${engineStatusData.drive}`, {
+                method: 'PATCH',
+            })
+            // response.status !== 500 ? id : cancelAnimationFrame(requestId)
+            const car = await response.json();
+            return car
+        }catch (err) {
+            console.log(err) 
         }
     }
 

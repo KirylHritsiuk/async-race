@@ -3,6 +3,7 @@ import GarageApi  from '../../restApi/garage'
 import { Api, ICarResponse, IQueryParams, urlData } from '../../restApi/template';
 import { CarRow } from '../components/carRow';
 import { Buttons } from "../components/buttons"
+import { pagListener } from '../components/listeners/pagination/garage';
 
 export const enum garagePagData {
     page = '1',
@@ -70,17 +71,16 @@ export class Garage extends Page {
                 cars.length.toString()),
             this.createPagination(Garage.TextObject.GaragePages, garagePagData.page)
         ];
+        pagination.addEventListener('click', (e) => pagListener(e))
         this.container.append(form);
         this.container.append(title);
         this.container.append(pagination);
 
-        
-       
         return this.container;
     }
     async renderRow () {
         const container: HTMLElement = document.querySelector('.pagination_rows')!;
-        const response = await this.api.getPage(getPageFromLocalStorage(obj))
+        const response = await this.api.getPage(getPageFromLocalStorage(obj, Garage.TextObject.Class))
         for(let i = 0; i < response.data.length; i++){
             const carRow = new CarRow(response.data[i]);
             container.append(carRow.render());
@@ -89,10 +89,10 @@ export class Garage extends Page {
     }
 }
 
-function getPageFromLocalStorage(obj:IQueryParams[]): IQueryParams[]{
-    if(localStorage.getItem('page')){
+export function getPageFromLocalStorage(obj:IQueryParams[], key: string): IQueryParams[]{
+    if(localStorage.getItem(key)){
         console.log('if get');
-        const data = localStorage.getItem('page')
+        const data = localStorage.getItem(key)
         return JSON.parse(data);
     }
     else {

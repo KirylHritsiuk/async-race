@@ -8,14 +8,18 @@ export abstract class Car {
     constructor(
         protected data: ICarResponse, 
         protected height: string, 
-        protected weight: string) {
+        protected weight: string,
+        protected position?: string
+        ) {
             this.color = data.color;
             this.weight = weight;
             this.height = height;
+            this.position = position;
             this.container = document.createElement('div');
     }
     create(){
         this.container.style.left = '50px';
+        this.container.style.position = this.position;
         this.container.className = Car.MainClass.className;
         this.container.innerHTML = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="${this.weight}" height="${this.height}" viewBox="0 0 1280.000000 640.000000"

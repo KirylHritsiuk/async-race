@@ -1,8 +1,10 @@
-import { Api, ICarResponse, IQueryParams, IWinResponse } from '../restApi/template'
+import { Api, ICarResponse, IQueryParams, IWinResponse, urlData } from '../restApi/template'
 
 
-export class WinnersApi extends Api<IWinResponse> {
+class WinnersApi extends Api<IWinResponse> {
     constructor(path: string) {
         super(path)
     }
 }
+
+export default new WinnersApi(urlData.winners);

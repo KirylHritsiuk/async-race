@@ -2,9 +2,7 @@ import { Page } from '../pages/components/templatePage';
 import { Garage } from '../pages/garage/garage';
 import { Winners } from '../pages/winners/winners';
 import { Header } from '../pages/header/header';
-import { Buttons } from '../pages/components/buttons';
-import { pagListener } from '../pages/components/listeners/paginationListener';
-import { easeInOut, getDistance, getTime } from '../pages/components/animationCar'
+
 
 export const enum PageId {
     Header = 'header',
@@ -44,30 +42,32 @@ export class App {
         App.container.className = 'page container';
         App.container.id = 'page';
     }
-     private  routeChange() {
+    private  routeChange() {
         window.addEventListener('hashchange', async() => {
             const hash = window.location.hash.slice(1);
             App.renderNewPage(hash);
         })
     }
+    private getHash(): string {
+        return window.location.hash.slice(1);
+    }
    async run() {
         const headerHTML = this.header.render();
         document.body.append(headerHTML);
         document.body.append(App.container);
-        await App.renderNewPage(PageId.Garage);
+        await App.renderNewPage(PageId.Winners);
         this.routeChange()
-     
-        const btn = document.querySelector("#createBtn")!;
-        const btnUpdate = document.querySelector("#updateBtn")!;
-        const btnGen = document.querySelector("#generateBtn")!;
-        const btnRace = document.querySelector("#raceBtn")!;
-        const btnReset = document.querySelector("#resetBtn")!;
+        // const btn = document.querySelector("#createBtn")!;
+        // const btnUpdate = document.querySelector("#updateBtn")!;
+        // const btnGen = document.querySelector("#generateBtn")!;
+        // const btnRace = document.querySelector("#raceBtn")!;
+        // const btnReset = document.querySelector("#resetBtn")!;
     
-        btn.addEventListener('click', Buttons.create);
-        btnGen.addEventListener('click', Buttons.generate);
-        btnUpdate.addEventListener('click', Buttons.update);
-        btnRace.addEventListener('click', Buttons.race);
-        btnReset.addEventListener('click', Buttons.reset);
+        // btn.addEventListener('click', Buttons.create);
+        // btnGen.addEventListener('click', Buttons.generate);
+        // btnUpdate.addEventListener('click', Buttons.update);
+        // btnRace.addEventListener('click', Buttons.race);
+        // btnReset.addEventListener('click', Buttons.reset);
 
     }
 }

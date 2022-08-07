@@ -1,6 +1,3 @@
-import { Api } from "../../restApi/template";
-import { pagListener } from "./listeners/paginationListener";
-
 export abstract class Page {
     protected container: HTMLElement;
     static TextObject = {}
@@ -22,7 +19,6 @@ export abstract class Page {
     protected createPagination(initClass: string , page: string) {
         const pagination = document.createElement('div');
         pagination.className = initClass;
-        pagination.addEventListener('click', (e) => pagListener(e))
         pagination.innerHTML = `<div class="pagination_title">
                 <h5 class="title">Page</h5>
                 <h5 class="title">#<span id="pageCount">${page}</span></h5>
@@ -37,7 +33,8 @@ export abstract class Page {
     async render (){
         return this.container;
     }
-    async renderRow (){
-        return this.container
+    async renderRow() {
+        return this.container;
     }
 }
+
