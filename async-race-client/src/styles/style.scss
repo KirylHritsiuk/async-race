@@ -38,7 +38,9 @@ body {
   color: #fff;
   border-radius: 5px;
 }
-
+.garage{
+  position: relative;
+}
 .form {
   display: flex;
   flex-direction: column;
@@ -162,6 +164,11 @@ body {
 }
 .car__road {
   border: 2px dashed;
+}
+.win {
+  top: 50%;
+  transform: translate(150%, -50%);
+  
 }
 @mixin winnersPagination {
     display: flex;
