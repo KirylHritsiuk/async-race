@@ -1,5 +1,6 @@
 import { ICarBody, ICarResponse, IWinResponse } from '../../restApi/template';
 import { WinnerCar } from '../components/winnerCar';
+import { getPageFromLocalStorage, obj } from '../garage/garage';
 import { Car } from './templateCar';
 let count = 1;
 export  class WinRow {

@@ -58,11 +58,11 @@ export class Winners extends Page {
         this.headRow = new WinHeadRow()
     }
     async render() {
-        const responseWin = await this.api.getPage(getPageFromLocalStorage(obj, Winners.TextObject.Class))
+        const winners = await this.api.getAll();
         const [title, pagination] = [
             this.createTitle(Winners.TextObject.TitleClass,
                              Winners.TextObject.Title, 
-                             responseWin.count), 
+                             winners.length.toString()), 
             this.createPagination(Winners.TextObject.PagClass, Winners.TextObject.Page)];
             this.container.append(title);
             this.container.append(pagination);
@@ -71,8 +71,11 @@ export class Winners extends Page {
     }
     async renderRow() {
         const container: HTMLElement = document.querySelector('.pagination_rows')!;
+        const pageCount: HTMLSpanElement = document.getElementById('pageCount');
+        const page = getPageFromLocalStorage(obj, Winners.TextObject.Class);
         container.prepend(this.headRow.render())
-        const responseWin = await this.api.getPage(getPageFromLocalStorage(obj, Winners.TextObject.Class))
+        pageCount.textContent = `${page[0].value}`
+        const responseWin = await this.api.getPage(page)
         console.log('renderRow', obj)
         for(let i = 0; i < responseWin.data.length; i++){
             

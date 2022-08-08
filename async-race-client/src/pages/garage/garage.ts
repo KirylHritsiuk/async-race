@@ -4,6 +4,7 @@ import { Api, ICarResponse, IQueryParams, urlData } from '../../restApi/template
 import { CarRow } from '../components/carRow';
 import { Buttons } from "../components/buttons"
 import { pagListener } from '../components/listeners/pagination/garage';
+import { ITimeResponse2 } from '../components/animationCar';
 
 export const enum garagePagData {
     page = '1',
@@ -30,6 +31,7 @@ export class Garage extends Page {
         Page: '1',
         GaragePages: 'garage_pagination',
         GaragePath:'/garage',
+        Win: 'win'
     }
 
     constructor(id: string) {
@@ -57,25 +59,34 @@ export class Garage extends Page {
     </div>`
         return form;
     }
+    viewWinner(){
+        const title = document.createElement('h2');
+        title.className = Garage.TextObject.Win;
+        title.id = Garage.TextObject.Win;
+        title.style.position = 'absolute';
+        return title;
+    }
     async render () {
         const cars = await this.api.getAll();
         const [
             form, 
             title, 
-            pagination
+            pagination,
+            win
         ] = [
             this.createGarageForm(Garage.TextObject.GarageForm),
             this.createTitle(
                 Garage.TextObject.GarageTitleClass,
                 Garage.TextObject.Title,
                 cars.length.toString()),
-            this.createPagination(Garage.TextObject.GaragePages, garagePagData.page)
+            this.createPagination(Garage.TextObject.GaragePages, garagePagData.page),
+            this.viewWinner()
         ];
-        pagination.addEventListener('click', (e) => pagListener(e))
+        this.container.addEventListener('click', async(e) =>  await pagListener(e))
         this.container.append(form);
         this.container.append(title);
         this.container.append(pagination);
-
+        this.container.append(win)
         return this.container;
     }
     async renderRow () {
@@ -92,11 +103,11 @@ export class Garage extends Page {
 export function getPageFromLocalStorage(obj:IQueryParams[], key: string): IQueryParams[]{
     if(localStorage.getItem(key)){
         console.log('if get');
-        const data = localStorage.getItem(key)
+        const data = sessionStorage.getItem(key)
         return JSON.parse(data);
     }
     else {
-        localStorage.setItem('page', JSON.stringify(obj));
+        sessionStorage.setItem(key, JSON.stringify(obj));
         console.log('set');
         return obj
     }

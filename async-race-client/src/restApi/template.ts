@@ -1,4 +1,5 @@
-import { engineStatusData } from "./engine";
+import { requestId, startAnimation } from "../pages/components/animationCar";
+import { engineStatusData, IEngineStartStopResponse, IEngineSwitchResponse } from "./engine";
 
 export const enum  urlData {
     baseUrl = 'http://localhost:3000',
@@ -34,11 +35,13 @@ export interface IQueryParams {
 export abstract class Api<T> {
     protected url: string;
     protected totalCount: string;
+    // public requestId: number;
 
     constructor(protected path: string) {
         this.url = urlData.baseUrl,
         this.totalCount = urlData.totalCount,
         this.path = path
+        // this.requestId = requestId
     }
 
     static generateQueryString(queryParams: IQueryParams[] = []): string {
@@ -92,29 +95,20 @@ export abstract class Api<T> {
         return car;
     }
 
-    async updateStatus(queryParams: IQueryParams[]): Promise<T> {
-        try{
-            const response = await fetch(`${this.url}${this.path}?${Api.generateQueryString(queryParams)}`, {
-                method: 'PATCH',
-            })
-            const car: T = await response.json();
-            return car
-        }catch (err) {
-            console.log(err)
-            // window.cancelAnimationFrame(requestId)
-        }
+    async updateStatus(queryParams: IQueryParams[]): Promise<IEngineStartStopResponse> {
+        const response = await fetch(`${this.url}${this.path}?${Api.generateQueryString(queryParams)}`, {
+            method: 'PATCH',
+        })
+        const car: IEngineStartStopResponse = await response.json();
+        return car
     }
-    async drive(id: string)  {
-        try{
-            const response = await fetch(`${this.url}${this.path}?${urlData.id}=${id}&${urlData.status}=${engineStatusData.drive}`, {
-                method: 'PATCH',
-            })
-            // response.status !== 500 ? id : cancelAnimationFrame(requestId)
-            const car = await response.json();
-            return car
-        }catch (err) {
-            console.log(err) 
-        }
+    async drive(id: string, time?: number): Promise<IEngineSwitchResponse> {
+        const response: Response  = await fetch(`${this.url}${this.path}?${urlData.id}=${id}&${urlData.status}=${engineStatusData.drive}`, {
+            method: 'PATCH',
+        })
+        if(!response.ok ) {return undefined}
+        const car: IEngineSwitchResponse = await response.json();
+        return car
     }
 
     async delete(id: string): Promise<void>{

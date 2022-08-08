@@ -2,6 +2,7 @@ import { Page } from '../pages/components/templatePage';
 import { Garage } from '../pages/garage/garage';
 import { Winners } from '../pages/winners/winners';
 import { Header } from '../pages/header/header';
+import { Buttons } from '../pages/components/buttons';
 
 
 export const enum PageId {
@@ -55,19 +56,7 @@ export class App {
         const headerHTML = this.header.render();
         document.body.append(headerHTML);
         document.body.append(App.container);
-        await App.renderNewPage(PageId.Winners);
+        await App.renderNewPage(PageId.Garage);
         this.routeChange()
-        // const btn = document.querySelector("#createBtn")!;
-        // const btnUpdate = document.querySelector("#updateBtn")!;
-        // const btnGen = document.querySelector("#generateBtn")!;
-        // const btnRace = document.querySelector("#raceBtn")!;
-        // const btnReset = document.querySelector("#resetBtn")!;
-    
-        // btn.addEventListener('click', Buttons.create);
-        // btnGen.addEventListener('click', Buttons.generate);
-        // btnUpdate.addEventListener('click', Buttons.update);
-        // btnRace.addEventListener('click', Buttons.race);
-        // btnReset.addEventListener('click', Buttons.reset);
-
     }
 }
