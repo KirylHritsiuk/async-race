@@ -1,16 +1,16 @@
 import { Api, ICarResponse, IQueryParams, IWinResponse, urlData } from "../../restApi/template";
 import { pagListener } from "../components/listeners/pagination/winners";
 import { Page } from "../components/templatePage";
-import { getPageFromLocalStorage } from "../garage/garage";
+import { getPageFromSessionStorage } from "../components/sessionStorage";
 import WinnersApi  from '../../restApi/winners';
 import CarApi  from '../../restApi/garage';
 import { WinRow } from '../components/winRow';
 import { WinHeadRow } from '../components/winHeadRow';
 
 
-export  const enum  winnersPagData {
+export  const enum winnersPagData {
     page = '1',
-    limit = '10', 
+    limit = '4', 
 }
 export const enum sortData {
     id ='id',
@@ -49,7 +49,8 @@ export class Winners extends Page {
         Count: '1',
         TitleClass: 'winners_title',
         PagClass: 'winner_pagination',
-        Page: '1'
+        PagId: 'winnersPag',
+        Page: '1',
     };
     constructor (id: string) {
         super(id);
@@ -63,7 +64,11 @@ export class Winners extends Page {
             this.createTitle(Winners.TextObject.TitleClass,
                              Winners.TextObject.Title, 
                              winners.length.toString()), 
-            this.createPagination(Winners.TextObject.PagClass, Winners.TextObject.Page)];
+            this.createPagination(
+                Winners.TextObject.PagClass,
+                obj,
+                Winners.TextObject.Class,
+                Winners.TextObject.PagId)];
             this.container.append(title);
             this.container.append(pagination);
             pagination.addEventListener('click', e => pagListener(e))
@@ -71,10 +76,8 @@ export class Winners extends Page {
     }
     async renderRow() {
         const container: HTMLElement = document.querySelector('.pagination_rows')!;
-        const pageCount: HTMLSpanElement = document.getElementById('pageCount');
-        const page = getPageFromLocalStorage(obj, Winners.TextObject.Class);
+        const page = getPageFromSessionStorage(obj, Winners.TextObject.Class);
         container.prepend(this.headRow.render())
-        pageCount.textContent = `${page[0].value}`
         const responseWin = await this.api.getPage(page)
         console.log('renderRow', obj)
         for(let i = 0; i < responseWin.data.length; i++){

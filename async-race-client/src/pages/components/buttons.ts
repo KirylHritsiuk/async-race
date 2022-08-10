@@ -1,108 +1,123 @@
-import GarageApi from '../../restApi/garage'
-import { ICarBody, ICarResponse, IQueryParams, IWinResponse, urlData } from '../../restApi/template';
-import { CarRow } from './carRow';
-import { updateTitle } from './updateTitle'
-import { randModel } from './randomCarName';
-import { randIndex } from './randomCarName';
-import { randomColor } from './randomColor';
-import { startAnim } from './animationCar';
-import { setWinner } from './setWinner'
+import GarageApi from "../../restApi/garage";
+import WinnersApi from "../../restApi/winners";
+import {
+  ICarBody,
+  ICarResponse,
+} from "../../restApi/template";
+import { CarRow } from "./carRow";
+import { updateTitle } from "./updateTitle";
+import { randModel } from "./randomCarName";
+import { randIndex } from "./randomCarName";
+import { randomColor } from "./randomColor";
+import { startAnim } from "./animationCar";
+import { setWinner } from "./setWinner";
+import { garagePagData } from "../garage/garage";
 export interface ICarAndId {
-    id: string,
-    car: HTMLDivElement
+  id: string;
+  car: HTMLDivElement;
 }
 export class Buttons {
-   static nameUpdate: HTMLInputElement = document.querySelector("#updateName")!;
-   static colorUpdate: HTMLInputElement = document.querySelector("#updateColor")!;
+  static generateCount: number = 100;
+  static async create() {
+    const [container, nameCreate, colorCreate] = [
+      <HTMLDivElement>document.querySelector("#pagRows"),
+      <HTMLInputElement>document.querySelector("#createName"),
+      <HTMLInputElement>document.querySelector("#createColor"),
+    ];
+    updateTitle(1);
+    const data: ICarBody = {
+      name: nameCreate.value,
+      color: colorCreate.value,
+    };
+    const body: ICarResponse = await GarageApi.create(data);
+    const row = new CarRow(body);
+    if (container.children.length < garagePagData.limit) container.append(row.render());
+    return body;
+  }
 
-    static async create() {
-        const container: HTMLElement = document.querySelector('.pagination_rows');
-        const nameCreate: HTMLInputElement = document.querySelector("#createName");
-        const colorCreate: HTMLInputElement = document.querySelector("#createColor");
-        updateTitle(1)
-        const data: ICarBody = {
-            name: nameCreate.value,
-            color: colorCreate.value,
-        }
-
-       const body: ICarResponse =  await GarageApi.create(data)
-        console.log(data);
+  static async generate() {
+    const container = <HTMLDivElement>document.querySelector("#pagRows");
+    updateTitle(Buttons.generateCount);
+    for (let i = 0; i < Buttons.generateCount; i++) {
+      const data: ICarBody = {
+        name: randModel(randIndex()),
+        color: randomColor(),
+      };
+      const body: ICarResponse = await GarageApi.create(data);
+      if (container.children.length < garagePagData.limit) {
         const row = new CarRow(body);
-        if(container.children.length < 7) container.append(row.render());
-       return body;
+        container.append(row.render());
+      }
     }
-    static async generate() {
-        const container: HTMLElement = document.querySelector('.pagination_rows');
-        updateTitle(100)
-        for(let i = 0; i < 100; i++){
-            const data: ICarBody = {
-                name: randModel(randIndex()),
-                color: randomColor()
-            }
-            const body: ICarResponse =  await GarageApi.create(data)
-            if(container.children.length < 7) {
-                const row = new CarRow(body);
-                container.append(row.render());
-            }
-        }
-    }
-    static async update(){
-       const [name, color, btn] =  [
-        <HTMLInputElement> document.querySelector('#updateName'),
-        <HTMLInputElement>document.querySelector('#updateColor'),
-        <HTMLButtonElement>document.querySelector('#updateBtn')]
-        const body = {
-            name: name.value,
-            color: color.value,
-        }
-        await GarageApi.update(btn.value, body);
-        btn.disabled = true;
-        name.disabled = true;
-        name.value = '';
-        const data: ICarResponse =  await GarageApi.getOnce(btn.value);
-        const container: HTMLElement = document.querySelector('.pagination_rows');
-        const row = document.getElementById(`${btn.value}`);
-        const createRow = new CarRow(data);
-        container.replaceChild(createRow.render(), row )
-        console.log(container)
-    }
-    static async race(){
-        const startButtons = <NodeListOf<HTMLButtonElement>>document.getElementsByName('startBtn');
-        const stopButtons = <NodeListOf<HTMLButtonElement>>document.getElementsByName('stopBtn');
-       
-        const race: HTMLButtonElement = document.querySelector('#raceBtn');
-        const reset: HTMLButtonElement = document.querySelector('#resetBtn');
-        race.disabled = true;
-        reset.disabled = false;
-        const rows = <NodeListOf<HTMLDivElement>>document.querySelectorAll('.row_container');
-        const id: string[] = [];
-        rows.forEach(el => id.push(el.id))
-        startButtons.forEach(el => el.disabled = true )
-    
-        const  winner = await Promise.any(id.map(startAnim))
-  
-        const winTitle = document.getElementById('win');
-        setWinner(winner);
-        console.log(winner)
-        setTimeout( () => {
-           GarageApi.getOnce(winner.id)
-            .then(val => {winTitle.textContent = `${val.name} WIN! ${winner.time/1000}s`
-            winTitle.style.visibility = 'visible'})
-        }, winner.time)
-      
-    }
-    static reset(){
-        const stopButtons = <NodeListOf<HTMLButtonElement>>document.getElementsByName('stopBtn');
-        const race: HTMLButtonElement = document.querySelector('#raceBtn');
-        const reset: HTMLButtonElement = document.querySelector('#resetBtn');
-        const title: HTMLElement = document.getElementById('win');
-        title.style.visibility = 'hidden'
-        stopButtons.forEach(el => el.click())
-        reset.disabled = true;
-        race.disabled = false;
-    }
-    static async delete(id: string){
-        await GarageApi.delete(id);
-    }
-}
+  }
 
+  static async update() {
+    const [container, name, color, btn] = [
+      <HTMLDivElement>document.querySelector("#pagRows"),
+      <HTMLInputElement>document.querySelector("#updateName"),
+      <HTMLInputElement>document.querySelector("#updateColor"),
+      <HTMLButtonElement>document.querySelector("#updateBtn"),
+    ];
+    const body = {
+      name: name.value,
+      color: color.value,
+    };
+    await GarageApi.update(btn.value, body);
+    btn.disabled = true;
+    name.disabled = true;
+    name.value = "";
+    const data: ICarResponse = await GarageApi.getOnce(btn.value);
+    const row = document.getElementById(`${btn.value}`);
+    const createRow = new CarRow(data);
+    container.replaceChild(createRow.render(), row);
+  }
+
+  static async race(elem: HTMLButtonElement) {
+    const [pagButtons, rows, prev, next] = [
+      <NodeListOf<HTMLButtonElement>>(
+        document.querySelectorAll(".pagination_controls")
+      ),
+      <NodeListOf<HTMLDivElement>>document.querySelectorAll(".row_container"),
+      <HTMLButtonElement>document.querySelector("#prev"),
+      <HTMLButtonElement>document.querySelector("#next"),
+    ];
+
+    const resetBtn = <HTMLButtonElement>elem.nextElementSibling;
+    elem.disabled = true;
+    prev.disabled = true;
+    next.disabled = true;
+    elem.disabled = true;
+    pagButtons.forEach((el) => (el.disabled = true));
+    const id: string[] = [];
+    rows.forEach((el) => id.push(el.id));
+
+    const winner = await Promise.any(id.map(startAnim));
+    const winTitle = document.getElementById("win");
+
+    setWinner(winner);
+    const winnerData = await GarageApi.getOnce(winner.id);
+
+    winTitle.textContent = `${winnerData.name} WIN! ${winner.time / 1000}s`;
+    winTitle.style.visibility = "visible";
+    resetBtn.disabled = false;
+  }
+  static reset() {
+    const [stopButtons, race, reset, title, prev, next] = [
+      <NodeListOf<HTMLButtonElement>>document.getElementsByName("stopBtn"),
+      <HTMLButtonElement>document.querySelector("#raceBtn"),
+      <HTMLButtonElement>document.querySelector("#resetBtn"),
+      <HTMLElement>document.getElementById("win"),
+      <HTMLButtonElement>document.querySelector("#prev"),
+      <HTMLButtonElement>document.querySelector("#next")]
+    title.style.visibility = "hidden";
+    stopButtons.forEach((el) => el.click());
+    reset.disabled = true;
+    race.disabled = false;
+    prev.disabled = false;
+    next.disabled = false;
+  }
+  static async delete(id: string) {
+    await GarageApi.delete(id);
+    await WinnersApi.delete(id);
+  }
+}

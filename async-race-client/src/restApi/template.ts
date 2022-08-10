@@ -29,19 +29,17 @@ export interface IWinResponse extends IWinBody {
     id: number
 }
 export interface IQueryParams {
-    key: string,
-    value: string,
+    key: number | string,
+    value: number | string,
 }
 export abstract class Api<T> {
     protected url: string;
     protected totalCount: string;
-    // public requestId: number;
 
     constructor(protected path: string) {
         this.url = urlData.baseUrl,
         this.totalCount = urlData.totalCount,
         this.path = path
-        // this.requestId = requestId
     }
 
     static generateQueryString(queryParams: IQueryParams[] = []): string {
@@ -102,11 +100,11 @@ export abstract class Api<T> {
         const car: IEngineStartStopResponse = await response.json();
         return car
     }
-    async drive(id: string, time?: number): Promise<IEngineSwitchResponse> {
+    async drive(id: string, time?: number): Promise<IEngineSwitchResponse | Response> {
         const response: Response  = await fetch(`${this.url}${this.path}?${urlData.id}=${id}&${urlData.status}=${engineStatusData.drive}`, {
             method: 'PATCH',
         })
-        if(!response.ok ) {return undefined}
+        if(!response.ok ) return Promise.reject(undefined)
         const car: IEngineSwitchResponse = await response.json();
         return car
     }

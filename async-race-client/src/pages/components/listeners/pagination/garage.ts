@@ -5,6 +5,7 @@ import { Garage, obj } from "../../../garage/garage";
 import { Buttons } from "../../buttons";
 import engineStatus from "../../../../restApi/engine";
 import { getTime, requestId, startAnimation } from "../../animationCar";
+import { setCountToSessionStorage } from "../../sessionStorage";
 export async function pagListener(e: Event) {
   const [elem, pageCount, carsCount, pageRow, prev, next, allCars] = [
     <HTMLButtonElement>e.target,
@@ -87,7 +88,7 @@ export async function pagListener(e: Event) {
       if (Number(allCars.textContent) > 7) {
         let incrCount = (Number(count) + 1).toString();
         pageCount.textContent = incrCount;
-        setCountToLocalStorage(incrCount);
+        setCountToSessionStorage(Garage.TextObject.Class, incrCount, obj);
         prev.removeAttribute("disabled");
         pageRow.innerHTML = "";
         garage.renderRow();
@@ -101,7 +102,7 @@ export async function pagListener(e: Event) {
       let decrCount = Number(count) - 1;
       if (decrCount > 0) {
         pageCount.textContent = decrCount.toString();
-        setCountToLocalStorage(decrCount.toString());
+        setCountToSessionStorage(Garage.TextObject.Class, decrCount.toString(), obj);
         pageRow.innerHTML = "";
         garage.renderRow();
         next.removeAttribute("disabled");
@@ -117,7 +118,7 @@ export async function pagListener(e: Event) {
       Buttons.update()
         break;
     case 'raceBtn':
-      Buttons.race()
+      Buttons.race(elem)
     break;
     
     case 'resetBtn':
@@ -130,7 +131,4 @@ export async function pagListener(e: Event) {
   
   }
 }
-function setCountToLocalStorage(count: string) {
-  obj[0].value = count;
-  localStorage.setItem("page", JSON.stringify(obj));
-}
+

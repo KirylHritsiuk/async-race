@@ -8,7 +8,10 @@ import { IQueryParams } from "../../restApi/template";
 import { urlData } from "../../restApi/template";
 import { ICarAndId } from "./buttons";
 
-
+interface IAnimId {
+  [key: string]: number,
+}
+const animId: IAnimId = {}
 const obj1: IQueryParams[] = [
   {
     key: urlData.id,
@@ -47,11 +50,6 @@ export interface ITimeResponse {
   id: string;
   time: number;
 }
-export interface ITimeResponse2 {
-  id: string;
-  time: number;
-  drive: IEngineSwitchResponse
-}
 export async function getTime(id: string): Promise<number> {
   obj1[0].value = id;
   const response = <IEngineStartStopResponse>(
@@ -61,14 +59,14 @@ export async function getTime(id: string): Promise<number> {
   return time;
 }
 //------------------------------------------------------------------------
-export async function getTime2(id: string): Promise<ITimeResponse> {
-  obj1[0].value = id;
-  const response = <IEngineStartStopResponse>(
-    await engineStatus.updateStatus(obj1)
-  );
-  const time = response.distance / response.velocity;
-  return { id, time };
-}
+// export async function getTime2(id: string): Promise<ITimeResponse> {
+//   obj1[0].value = id;
+//   const response = <IEngineStartStopResponse>(
+//     await engineStatus.updateStatus(obj1)
+//   );
+//   const time = response.distance / response.velocity;
+//   return { id, time };
+// }
 
 
 //----------------------------------------------------------------------
@@ -100,7 +98,7 @@ export function startAnimation(
     callback(progress);
 
     if (progress < 1) {
-      requestId = requestAnimationFrame(animationCar);
+      animId[id] = requestAnimationFrame(animationCar);
     }
   });
   return requestId;
@@ -112,13 +110,10 @@ export interface ICarAndTime {
 }
 export function startAnimation2(
   data: ITimeResponse,
-  // id: string,
-  // duration: number,
   callback = (progress: number) => {
     const translate = easeInOut(progress) * getDistance();
     const row: HTMLElement = document.getElementById(`${data.id}`);
     const car = <HTMLDivElement>row.childNodes[2];
-
     car.style.transform = `translateX(${translate}px)`;
   }
 ): ITimeResponse {
@@ -128,14 +123,11 @@ export function startAnimation2(
     if (!startAnimation) {
       startAnimation = time;
     }
-
     const progress = (time - startAnimation) / data.time;
-    // const progress = (time - startAnimation) / duration;
-
     callback(progress);
-
     if (progress < 1) {
       requestId = requestAnimationFrame(animationCar);
+
     }
   });
   return data
@@ -154,18 +146,26 @@ export async function getWinner(){
 
 }
 
-
-export async function startAnim(id: string): Promise<ITimeResponse2> {
+export async function startAnim(id: string): Promise<ITimeResponse> {
   try {
+
     const time = await getTime(id);
     const row = document.getElementById(id);
-    const btn = <HTMLButtonElement>row.children[1].lastElementChild;
-    btn.disabled = false;
+    const startBtn = <HTMLButtonElement>row.children[1].firstElementChild;
+    const stopBtn = <HTMLButtonElement>row.children[1].lastElementChild;
+
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
     startAnimation(id, time);
-    const drive = await engineStatus.drive(id);
-    // if (drive === undefined) cancelAnimationFrame(requestId);
-    return {id, time, drive}
-  } catch {
-    cancelAnimationFrame(requestId);
+    await engineStatus.drive(id);
+    const timeSec =  setTimeToSeconds(time)
+      return { id, time }
+    } catch {
+      cancelAnimationFrame(animId[id]);
+      return Promise.reject()
   }
+}
+
+function setTimeToSeconds (time: number) {
+    return time/1000;
 }

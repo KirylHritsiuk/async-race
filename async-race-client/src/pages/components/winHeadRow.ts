@@ -23,7 +23,8 @@ export  class WinHeadRow {
     private createCol(data: IWinnersHead) {
         const container = document.createElement('div');
         container.className = data.className;
-        container.innerHTML = `<${data.tag}>${data.title}</${data.tag}>`;
+        container.id = data.title;
+        container.innerHTML = `${data.title}`;
         return container;
     }
     render () {

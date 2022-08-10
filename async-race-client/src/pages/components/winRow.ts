@@ -1,8 +1,7 @@
-import { ICarBody, ICarResponse, IWinResponse } from '../../restApi/template';
+import { ICarBody, ICarResponse, IWinResponse, urlData } from '../../restApi/template';
 import { WinnerCar } from '../components/winnerCar';
-import { getPageFromLocalStorage, obj } from '../garage/garage';
-import { Car } from './templateCar';
-let count = 1;
+import { sortData } from '../winners/winners';
+
 export  class WinRow {
     private container: HTMLElement;
     private car: WinnerCar;
@@ -35,12 +34,11 @@ export  class WinRow {
     }
     private createCarCol(className: string) {
         const controls = document.createElement('div');
-
         controls.className = className;
         controls.append(this.car.create())
         return controls;
     }
-    private createNameCol(className: string, name: string = 'Name') {
+    private createNameCol(className: string,) {
         const container = document.createElement('div');
         container.className =className;
         container.innerHTML =  `<h6 class="">${this.carData.name}</h6>`

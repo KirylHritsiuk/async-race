@@ -1,15 +1,18 @@
 import { PageId } from '../../../../app/app';
 import { engineStatusData } from '../../../../restApi/engine';
 import { IQueryParams, urlData } from '../../../../restApi/template';
-import { Garage, obj} from '../../../garage/garage';
+
 import { Buttons } from '../../buttons';
 import engineStatus from '../../../../restApi/engine'
+import winners from '../../../../restApi/winners';
+import { obj, orderData, sortData, Winners, winnersPagData } from '../../../winners/winners';
+import { getPageFromSessionStorage, setCountToSessionStorage } from '../../sessionStorage';
+import { WinHeadRow } from '../../winHeadRow';
 
-export async function  pagListener(e: Event){
+export async function pagListener(e: Event){
     const [
         elem,
         pageCount, 
-        carsCount, 
         pageRow,
         prev,
         next,
@@ -17,34 +20,64 @@ export async function  pagListener(e: Event){
     ] = [
         <HTMLButtonElement>e.target,
         document.querySelector('#pageCount')!,
-        document.querySelector('#count')!,
         document.querySelector('.pagination_rows')!,
         <HTMLButtonElement>document.querySelector('#prev'),
         <HTMLButtonElement>document.querySelector('#next'),
         <HTMLElement>document.querySelector('#count')]
-
-      let count = pageCount.textContent;
-    const garage = new Garage(PageId.Garage)
-    console.log('pag', elem);
-  
+        console.log('click')
+    let count = pageCount.textContent;
+    const winners = new Winners(PageId.Winners)
+   
+    const currentSort = getPageFromSessionStorage(obj, Winners.TextObject.Class)
         switch(elem.id){
-               
-
-
+            case WinHeadRow.DataObject[3].title:
+            if(currentSort[3].value !== orderData.z) {
+                console.log('if')
+                currentSort[2].value = sortData.wins,
+                currentSort[3].value = orderData.z
+                sessionStorage.setItem(Winners.TextObject.Class, JSON.stringify(currentSort))
+                pageRow.innerHTML = '';
+                winners.renderRow()
+            } else {
+                console.log('else')
+                currentSort[2].value = sortData.wins,
+                currentSort[3].value = orderData.a
+                sessionStorage.setItem(Winners.TextObject.Class, JSON.stringify(currentSort))
+                pageRow.innerHTML = '';
+                winners.renderRow()
+            }
+                break;
+            
+            case WinHeadRow.DataObject[4].title:
+                if(currentSort[3].value !== orderData.z) {
+                    console.log('if')
+                    currentSort[2].value = sortData.time,
+                    currentSort[3].value = orderData.z
+                    sessionStorage.setItem(Winners.TextObject.Class, JSON.stringify(currentSort))
+                    pageRow.innerHTML = '';
+                    winners.renderRow()
+                } else {
+                    console.log('else')
+                    currentSort[2].value = sortData.time,
+                    currentSort[3].value = orderData.a
+                    sessionStorage.setItem(Winners.TextObject.Class, JSON.stringify(currentSort))
+                    pageRow.innerHTML = '';
+                    winners.renderRow()
+                }
+                break;    
             case 'next':
                 if(Number(count) === (Math.ceil(Number(allCars.textContent)/Number(obj[1].value)))) {
                     next.setAttribute('disabled', 'disabled');
                     break;
                 }
-                if(Number(allCars.textContent) > 7 ){
+                if(Number(allCars.textContent) > Number(winnersPagData.limit)){
                     let incrCount = (Number(count) + 1).toString();
                     pageCount.textContent = incrCount;
-                    setCountToLocalStorage(incrCount);
+                    setCountToSessionStorage(Winners.TextObject.Class, incrCount, obj);
                     prev.removeAttribute('disabled');
                     pageRow.innerHTML = '';
-                    garage.renderRow()
+                   winners.renderRow()
                 } else {
-                    console.log('<7')
                     next.setAttribute('disabled', 'disabled');
                 }
                 
@@ -53,9 +86,9 @@ export async function  pagListener(e: Event){
                 let decrCount = (Number(count) - 1);
                 if(decrCount > 0) {
                     pageCount.textContent = decrCount.toString();
-                    setCountToLocalStorage(decrCount.toString());
+                    setCountToSessionStorage(Winners.TextObject.Class, decrCount.toString(), obj);
                     pageRow.innerHTML = '';
-                    garage.renderRow()
+                    winners.renderRow()
                     next.removeAttribute('disabled');
                 }
                 if(decrCount === 1) {
@@ -64,9 +97,5 @@ export async function  pagListener(e: Event){
             break;
         }
 }
- function setCountToLocalStorage(count: string){
-   obj[0].value = count;
-   localStorage.setItem('page', JSON.stringify(obj))  
- }
 
 
