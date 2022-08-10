@@ -1,8 +1,7 @@
-import { Page } from '../pages/components/templatePage';
+import { Page } from '../pages/templates/templatePage';
 import { Garage } from '../pages/garage/garage';
 import { Winners } from '../pages/winners/winners';
 import { Header } from '../pages/header/header';
-import { Buttons } from '../pages/components/buttons';
 
 
 export const enum PageId {

@@ -1,4 +1,4 @@
-import { modelsBase } from "../../carsDataBase/carsMark";
+import { modelsBase } from "../car/carsDataBase/carsMark";
 
 export function randIndex (){
     const [min, max] = [0, modelsBase.length - 1]

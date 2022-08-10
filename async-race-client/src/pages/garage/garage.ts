@@ -1,4 +1,4 @@
-import { Page } from "../components/templatePage";
+import { Page } from "../templates/templatePage";
 import GarageApi from "../../restApi/garage";
 import {
   Api,
@@ -6,10 +6,9 @@ import {
   IQueryParams,
   urlData,
 } from "../../restApi/template";
-import { CarRow } from "../components/carRow";
-import { Buttons } from "../components/buttons";
-import { pagListener } from "../components/listeners/pagination/garage";
-import { getPageFromSessionStorage } from "../components/sessionStorage";
+import { CarRow } from "../components/car/carRow";
+import { pagListener } from "../components/listeners/garage";
+import { getFromSessionStorage } from "../components/storage/sessionStorage";
 
 export const enum garagePagData {
   page = 1,
@@ -94,7 +93,7 @@ export class Garage extends Page {
     const [container, response] = [
       <HTMLElement>document.querySelector(".pagination_rows"),
       await this.api.getPage(
-        getPageFromSessionStorage(obj, Garage.TextObject.Class)
+        getFromSessionStorage(obj, Garage.TextObject.Class)
       ),
     ];
     for (let i = 0; i < response.data.length; i++) {

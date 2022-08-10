@@ -1,5 +1,5 @@
 import { IQueryParams } from "../../restApi/template";
-import { getPageFromSessionStorage } from "./sessionStorage";
+import { getFromSessionStorage } from "../components/storage/sessionStorage";
 
 export abstract class Page {
     protected container: HTMLElement;
@@ -23,14 +23,14 @@ export abstract class Page {
         const pagination = document.createElement('div');
         pagination.id = id;
         pagination.className = initClass;
-        const page = getPageFromSessionStorage(obj, key);
+        const page = getFromSessionStorage(obj, key);
         pagination.innerHTML = `<div class="pagination_title">
                 <h5 class="title">Page</h5>
                 <h5 class="title">#<span id="pageCount">${page[0].value}</span></h5>
             </div>
             <div id='pagRows' class="pagination_rows"></div>
             <div class="pagination_controls">
-                <button id="prev" class="button btn-1" type="button" >PREV</button>
+                <button id="prev" class="button btn-1" type="button">PREV</button>
                 <button id="next" class="button btn-1" type="button">NEXT</button>
             </div>`
         return pagination;

@@ -1,6 +1,6 @@
-import { ICarBody, ICarResponse } from "../../restApi/template";
-import { easeInOut } from "./animationCar";
-import { Car } from "./templateCar";
+import { ICarBody, ICarResponse } from "../../../restApi/template";
+import { easeInOut } from "../animation/animationCar";
+import { Car } from "../../templates/templateCar";
 
 
 export class GarageCar extends Car {

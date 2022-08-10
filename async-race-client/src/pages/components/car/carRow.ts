@@ -1,4 +1,4 @@
-import { ICarBody, ICarResponse } from '../../restApi/template';
+import { ICarBody, ICarResponse } from '../../../restApi/template';
 import { GarageCar } from './garageCar';
 export  class CarRow {
     private container: HTMLElement;
@@ -19,7 +19,6 @@ export  class CarRow {
         this.data = data;
         this.mark = data.name;
         this.car = new GarageCar(this.data);
-        console.log(this.container.dataset.mark);
     }
     private createCarOptions(className: string) {
         const controls = document.createElement('div');

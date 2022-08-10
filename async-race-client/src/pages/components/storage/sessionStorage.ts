@@ -1,6 +1,6 @@
-import { IQueryParams } from '../../restApi/template';
+import { IQueryParams } from '../../../restApi/template';
 
-export function getPageFromSessionStorage(obj:IQueryParams[], key: string): IQueryParams[]{
+export function getFromSessionStorage(obj:IQueryParams[], key: string): IQueryParams[]{
     if(sessionStorage.getItem(key)){
         const data = <string>sessionStorage.getItem(key)
         return JSON.parse(data);
@@ -12,8 +12,7 @@ export function getPageFromSessionStorage(obj:IQueryParams[], key: string): IQue
     }
 }
 
-export function setCountToSessionStorage(key: string , count: string, obj: IQueryParams[]) {
+export function setToSessionStorage(key: string , count: string, obj: IQueryParams[]) {
     obj[0].value = count;
     sessionStorage.setItem(key, JSON.stringify(obj));
   }
-// export function setSortToSessionstorage(key, )

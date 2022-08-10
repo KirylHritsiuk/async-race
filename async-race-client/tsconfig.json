@@ -2,12 +2,15 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "module": "ES2022",
+    "module": "CommonJS",
     "target": "ES2016",
     "downlevelIteration": true,
     "allowJs": true,
-    "lib": ["ES2021.Promise",
+    // "moduleResolution": "Node16",
+    "lib": ["ES2022",
     "DOM", "ES6", "DOM.Iterable", "ScriptHost"]
   },
-  "files": ["src/index.ts"]
+  "include": [
+    "./src"
+  ],
 }

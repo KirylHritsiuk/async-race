@@ -1,4 +1,4 @@
-import { Components } from "../components/templateHeader";
+import { Components } from "../templates/templateHeader";
 import { PageId } from "../../app/app";
 
 const linkData = [

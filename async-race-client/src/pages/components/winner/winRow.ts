@@ -1,6 +1,5 @@
-import { ICarBody, ICarResponse, IWinResponse, urlData } from '../../restApi/template';
-import { WinnerCar } from '../components/winnerCar';
-import { sortData } from '../winners/winners';
+import { ICarResponse, IWinResponse} from '../../../restApi/template';
+import { WinnerCar } from '../car/winnerCar';
 
 export  class WinRow {
     private container: HTMLElement;
@@ -57,17 +56,12 @@ export  class WinRow {
         return container;
     }
     render (pos: number) {
-        const [number, car, name, wins, time] = [
+        this.container.append(...[
             this.createPositionNumberCol(WinRow.TextObject.position, pos),
             this.createCarCol(WinRow.TextObject.car),
             this.createNameCol(WinRow.TextObject.name),
             this.createWinsCol(WinRow.TextObject.wins),
-            this.createTimeCol(WinRow.TextObject.time),];
-        this.container.append(number);
-        this.container.append(car);
-        this.container.append(name);
-        this.container.append(wins);
-        this.container.append(time);
+            this.createTimeCol(WinRow.TextObject.time),]);
         return this.container;
     } 
 }

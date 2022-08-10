@@ -1,4 +1,4 @@
-import { requestId, startAnimation } from "../pages/components/animationCar";
+import { requestId, startAnimation } from "../pages/components/animation/animationCar";
 import { engineStatusData, IEngineStartStopResponse, IEngineSwitchResponse } from "./engine";
 
 export const enum  urlData {

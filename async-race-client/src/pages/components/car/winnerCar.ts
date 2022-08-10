@@ -1,5 +1,5 @@
-import { ICarResponse } from "../../restApi/template";
-import { Car } from "./templateCar";
+import { ICarResponse } from "../../../restApi/template";
+import { Car } from "../../templates/templateCar";
 
 
 export class WinnerCar extends Car {

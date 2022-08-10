@@ -1,11 +1,12 @@
-import { PageId } from "../../../../app/app";
-import { engineStatusData } from "../../../../restApi/engine";
-import { IQueryParams, urlData } from "../../../../restApi/template";
-import { Garage, obj } from "../../../garage/garage";
-import { Buttons } from "../../buttons";
-import engineStatus from "../../../../restApi/engine";
-import { getTime, requestId, startAnimation } from "../../animationCar";
-import { setCountToSessionStorage } from "../../sessionStorage";
+import { PageId } from "../../../app/app";
+import { engineStatusData } from "../../../restApi/engine";
+import { IQueryParams, urlData } from "../../../restApi/template";
+import { Garage, garagePagData, obj } from "../../garage/garage";
+import engineStatus from "../../../restApi/engine";
+import { requestId, startAnimation } from "../animation/animationCar";
+import { getTime } from '../animation/getTime'
+import { setToSessionStorage } from "../storage/sessionStorage";
+import { Buttons } from "./buttons";
 export async function pagListener(e: Event) {
   const [elem, pageCount, carsCount, pageRow, prev, next, allCars] = [
     <HTMLButtonElement>e.target,
@@ -39,7 +40,6 @@ export async function pagListener(e: Event) {
       row1.remove();
       await Buttons.delete(row1.id);
       carsCount.textContent = (await garage.api.getAll()).length.toString();
-      console.log(row1);
       break;
 
     case "startCar":
@@ -85,15 +85,14 @@ export async function pagListener(e: Event) {
         next.setAttribute("disabled", "disabled");
         break;
       }
-      if (Number(allCars.textContent) > 7) {
+      if (Number(allCars.textContent) > garagePagData.limit) {
         let incrCount = (Number(count) + 1).toString();
         pageCount.textContent = incrCount;
-        setCountToSessionStorage(Garage.TextObject.Class, incrCount, obj);
+        setToSessionStorage(Garage.TextObject.Class, incrCount, obj);
         prev.removeAttribute("disabled");
         pageRow.innerHTML = "";
         garage.renderRow();
-      } else {
-        console.log("<7");
+      } else {;
         next.setAttribute("disabled", "disabled");
       }
 
@@ -102,7 +101,7 @@ export async function pagListener(e: Event) {
       let decrCount = Number(count) - 1;
       if (decrCount > 0) {
         pageCount.textContent = decrCount.toString();
-        setCountToSessionStorage(Garage.TextObject.Class, decrCount.toString(), obj);
+        setToSessionStorage(Garage.TextObject.Class, decrCount.toString(), obj);
         pageRow.innerHTML = "";
         garage.renderRow();
         next.removeAttribute("disabled");

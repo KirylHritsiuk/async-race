@@ -1,17 +1,15 @@
-import GarageApi from "../../restApi/garage";
-import WinnersApi from "../../restApi/winners";
-import {
-  ICarBody,
-  ICarResponse,
-} from "../../restApi/template";
-import { CarRow } from "./carRow";
-import { updateTitle } from "./updateTitle";
-import { randModel } from "./randomCarName";
-import { randIndex } from "./randomCarName";
-import { randomColor } from "./randomColor";
-import { startAnim } from "./animationCar";
-import { setWinner } from "./setWinner";
-import { garagePagData } from "../garage/garage";
+import { ICarBody, ICarResponse } from "../../../restApi/template";
+import { garagePagData } from "../../garage/garage";
+import { startAnim } from "../animation/animationRace";
+import { CarRow } from "../car/carRow";
+import { randIndex, randModel } from "../car/randomCarName";
+import { randomColor } from "../car/randomColor";
+
+import { updateTitle } from "../updateTitle";
+import GarageApi  from "../../../restApi/garage"
+import WinnersApi  from "../../../restApi/winners"
+import { setWinner } from "../winner/setWinner";
+
 export interface ICarAndId {
   id: string;
   car: HTMLDivElement;
@@ -67,7 +65,7 @@ export class Buttons {
     name.disabled = true;
     name.value = "";
     const data: ICarResponse = await GarageApi.getOnce(btn.value);
-    const row = document.getElementById(`${btn.value}`);
+    const row = <HTMLDivElement>document.getElementById(`${btn.value}`);
     const createRow = new CarRow(data);
     container.replaceChild(createRow.render(), row);
   }
@@ -92,12 +90,12 @@ export class Buttons {
     rows.forEach((el) => id.push(el.id));
 
     const winner = await Promise.any(id.map(startAnim));
-    const winTitle = document.getElementById("win");
+    const winTitle = <HTMLDivElement>document.getElementById("win");
 
     setWinner(winner);
     const winnerData = await GarageApi.getOnce(winner.id);
 
-    winTitle.textContent = `${winnerData.name} WIN! ${winner.time / 1000}s`;
+    winTitle.textContent = `${winnerData.name} WIN! ${winner.timeSec}s`;
     winTitle.style.visibility = "visible";
     resetBtn.disabled = false;
   }
