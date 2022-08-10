@@ -16,7 +16,6 @@ export  class WinRow {
         winner: 'winner'
     }
     mark: string;
-    count: number
     constructor(private data: IWinResponse, private carData: ICarResponse ) {
         this.container = document.createElement('div');
         this.container.className =`${WinRow.TextObject.row} ${WinRow.TextObject.winner}`;
@@ -26,13 +25,12 @@ export  class WinRow {
         this.carData = carData;
         this.mark = carData.name;
         this.car = new WinnerCar(this.carData);
-        this.count = count++
     }
 
-    private createPositionNumberCol(className: string) {
+    private createPositionNumberCol(className: string, pos: number) {
         const controls = document.createElement('div');
         controls.className = className;
-        controls.innerHTML = `<h6 class="positionNumber">${this.count}</h6>`
+        controls.innerHTML = `<h6 class="positionNumber">${pos}</h6>`
         return controls;
     }
     private createCarCol(className: string) {
@@ -60,9 +58,9 @@ export  class WinRow {
         container.innerHTML = `${this.data.time}`
         return container;
     }
-    render () {
+    render (pos: number) {
         const [number, car, name, wins, time] = [
-            this.createPositionNumberCol(WinRow.TextObject.position),
+            this.createPositionNumberCol(WinRow.TextObject.position, pos),
             this.createCarCol(WinRow.TextObject.car),
             this.createNameCol(WinRow.TextObject.name),
             this.createWinsCol(WinRow.TextObject.wins),

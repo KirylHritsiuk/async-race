@@ -78,10 +78,10 @@ export class Winners extends Page {
         const responseWin = await this.api.getPage(page)
         console.log('renderRow', obj)
         for(let i = 0; i < responseWin.data.length; i++){
-            
+            const position = i + 1;
             const responseCar: ICarResponse = await this.carApi.getOnce((responseWin.data[i].id).toString())
             const winRow = new WinRow(responseWin.data[i], responseCar );
-            container.append(winRow.render());
+            container.append(winRow.render(position));
         } 
         return container;    
     } 
