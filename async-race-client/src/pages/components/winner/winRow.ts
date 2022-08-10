@@ -56,12 +56,12 @@ export  class WinRow {
         return container;
     }
     render (pos: number) {
-        this.container.append(...[
+        this.container.append(
             this.createPositionNumberCol(WinRow.TextObject.position, pos),
             this.createCarCol(WinRow.TextObject.car),
             this.createNameCol(WinRow.TextObject.name),
             this.createWinsCol(WinRow.TextObject.wins),
-            this.createTimeCol(WinRow.TextObject.time),]);
+            this.createTimeCol(WinRow.TextObject.time));
         return this.container;
     } 
 }

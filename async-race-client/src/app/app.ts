@@ -48,13 +48,10 @@ export class App {
             App.renderNewPage(hash);
         })
     }
-    private getHash(): string {
-        return window.location.hash.slice(1);
-    }
-   async run() {
+    async run() {
+        window.location.hash = PageId.Garage;
         const headerHTML = this.header.render();
-        document.body.append(headerHTML);
-        document.body.append(App.container);
+        document.body.append(headerHTML, App.container);
         await App.renderNewPage(PageId.Garage);
         this.routeChange()
     }

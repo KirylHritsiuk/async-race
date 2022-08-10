@@ -3,12 +3,13 @@ import { engineStatusData } from "../../../restApi/engine";
 import { IQueryParams, urlData } from "../../../restApi/template";
 import { Garage, garagePagData, obj } from "../../garage/garage";
 import engineStatus from "../../../restApi/engine";
-import { requestId, startAnimation } from "../animation/animationCar";
-import { getTime } from '../animation/getTime'
+import { animId, startAnimation } from "../animation/animationCar";
+import { getTime } from "../animation/getTime";
 import { setToSessionStorage } from "../storage/sessionStorage";
 import { Buttons } from "./buttons";
+
 export async function pagListener(e: Event) {
-  const [elem, pageCount, carsCount, pageRow, prev, next, allCars] = [
+  const [elem, pageCount, carsCount, pagRowsContainer, prev, next, allCars] = [
     <HTMLButtonElement>e.target,
     document.querySelector("#pageCount")!,
     document.querySelector("#count")!,
@@ -20,12 +21,20 @@ export async function pagListener(e: Event) {
 
   let count = pageCount.textContent;
   const garage = new Garage(PageId.Garage);
-  const row2 = <HTMLElement>elem.closest(".row_container")!;
-
- 
+  const data: IQueryParams[] = [
+    {
+      key: urlData.id,
+      value: '',
+    },
+    {
+      key: urlData.status,
+      value: '',
+    },
+  ];
+  
   switch (elem.id) {
     case "selectCar":
-      const row = <HTMLElement>elem.closest(".row_container")!;
+      const row = <HTMLElement>elem.closest(".row_container");
       const updateBtn = <HTMLButtonElement>document.getElementById("updateBtn");
       const updateName = <HTMLInputElement>(
         document.getElementById("updateName")!
@@ -36,7 +45,7 @@ export async function pagListener(e: Event) {
       updateName.disabled = false;
       break;
     case "removeCar":
-      const row1 = <HTMLElement>elem.closest(".row_container")!;
+      const row1 = <HTMLElement>elem.closest(".row_container");
       row1.remove();
       await Buttons.delete(row1.id);
       carsCount.textContent = (await garage.api.getAll()).length.toString();
@@ -44,33 +53,27 @@ export async function pagListener(e: Event) {
 
     case "startCar":
       try {
+        const row2 = <HTMLElement>elem.closest(".row_container");
         const time = await getTime(row2.id);
         elem.disabled = true;
         (<HTMLButtonElement>elem.nextElementSibling).disabled = false;
         startAnimation(row2.id, time);
         const drive = await engineStatus.drive(row2.id, time);
-        if (drive instanceof undefined) window.cancelAnimationFrame(requestId);
+        if (drive instanceof undefined)
+          window.cancelAnimationFrame(animId[row2.id]);
       } catch {
-        window.cancelAnimationFrame(requestId);
+        window.cancelAnimationFrame(animId[row.id]);
       }
       break;
 
     case "stopCar":
-      const row3 = <HTMLElement>elem.closest(".row_container")!;
-      const obj4: IQueryParams[] = [
-        {
-          key: urlData.id,
-          value: row3.id,
-        },
-        {
-          key: urlData.status,
-          value: engineStatusData.stopped,
-        },
-      ];
-      const car3 = <HTMLDivElement>row3.childNodes[2];
-      const stop = await engineStatus.updateStatus(obj4);
+      const row3 = <HTMLElement>elem.closest(".row_container");
+      data[0].value = row3.id;
+      data[1].value =engineStatusData.stopped;
+      const car3 = <HTMLDivElement>row3.childNodes[2],
+        stop = await engineStatus.updateStatus(data);
       if (stop) {
-        window.cancelAnimationFrame(requestId);
+        window.cancelAnimationFrame(animId[row3.id]);
         car3.style.transform = "translateX(0px)";
         elem.disabled = true;
       }
@@ -80,7 +83,7 @@ export async function pagListener(e: Event) {
     case "next":
       if (
         Number(count) ===
-        Math.ceil(Number(allCars.textContent) / Number(obj[1].value))
+        Math.ceil(Number(allCars.textContent) / <number>obj[1].value)
       ) {
         next.setAttribute("disabled", "disabled");
         break;
@@ -90,19 +93,18 @@ export async function pagListener(e: Event) {
         pageCount.textContent = incrCount;
         setToSessionStorage(Garage.TextObject.Class, incrCount, obj);
         prev.removeAttribute("disabled");
-        pageRow.innerHTML = "";
+        pagRowsContainer.innerHTML = "";
         garage.renderRow();
-      } else {;
+      } else {
         next.setAttribute("disabled", "disabled");
       }
-
       break;
     case "prev":
       let decrCount = Number(count) - 1;
       if (decrCount > 0) {
         pageCount.textContent = decrCount.toString();
         setToSessionStorage(Garage.TextObject.Class, decrCount.toString(), obj);
-        pageRow.innerHTML = "";
+        pagRowsContainer.innerHTML = "";
         garage.renderRow();
         next.removeAttribute("disabled");
       }
@@ -110,24 +112,22 @@ export async function pagListener(e: Event) {
         prev.setAttribute("disabled", "disabled");
       }
       break;
-      case 'createBtn':
-       Buttons.create()
-        break;
-    case 'updateBtn':
-      Buttons.update()
-        break;
-    case 'raceBtn':
-      Buttons.race(elem)
-    break;
-    
-    case 'resetBtn':
-      Buttons.reset()
-    break;
+    case "createBtn":
+      Buttons.create();
+      break;
+    case "updateBtn":
+      Buttons.update();
+      break;
+    case "raceBtn":
+      Buttons.race(elem);
+      break;
 
-    case 'generateBtn':
-      Buttons.generate()
-    break;
-  
+    case "resetBtn":
+      Buttons.reset();
+      break;
+
+    case "generateBtn":
+      Buttons.generate();
+      break;
   }
 }
-

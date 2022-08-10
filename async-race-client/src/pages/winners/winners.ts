@@ -54,7 +54,7 @@ export class Winners extends Page {
         super(id);
         this.api = WinnersApi;
         this.carApi = CarApi;
-        this.headRow = new WinHeadRow()
+        this.headRow = new WinHeadRow();
     }
     async render() {
         const winners = await this.api.getAll();
@@ -73,7 +73,7 @@ export class Winners extends Page {
         return this.container
     }
     async renderRow() {
-        const [container, page] =[
+        const [container, page] = [
             <HTMLElement>document.querySelector('.pagination_rows'),
             getFromSessionStorage(obj, Winners.TextObject.Class)]
         container.prepend(this.headRow.render())
