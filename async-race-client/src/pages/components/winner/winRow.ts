@@ -39,8 +39,8 @@ export  class WinRow {
     }
     private createNameCol(className: string,) {
         const container = document.createElement('div');
-        container.className =className;
-        container.innerHTML =  `<h6 class="">${this.carData.name}</h6>`
+        container.className = className;
+        container.innerHTML =  `<h6>${this.carData.name}</h6>`
       return container
     }
     private createWinsCol(className: string) {
