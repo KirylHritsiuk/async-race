@@ -1,19 +1,21 @@
-import { Page } from "../templates/templatePage";
-import GarageApi from "../../restApi/garage";
+import { Page } from '../templates/templatePage';
+import GarageApi from '../../restApi/garage';
 import {
   Api,
   ICarResponse,
   IQueryParams,
   urlData,
-} from "../../restApi/template";
-import { CarRow } from "../components/car/carRow";
-import { pagListener } from "../components/listeners/garage";
-import { getFromSessionStorage } from "../components/storage/sessionStorage";
+} from '../../restApi/template';
+import CarRow from '../components/car/carRow';
+import { pagListener } from '../components/listeners/garage';
+import Storage from '../components/storage/sessionStorage';
+import formHTML from '../../common/components/form';
 
-export const enum garagePagData {
-  page = 1,
-  limit = 7,
-}
+export const garagePagData = {
+  page: 1,
+  limit: 7,
+};
+
 export const obj: IQueryParams[] = [
   {
     key: urlData.page,
@@ -26,76 +28,68 @@ export const obj: IQueryParams[] = [
 ];
 export class Garage extends Page {
   api: Api<ICarResponse>;
+
+  storage: Storage;
+
   static TextObject = {
-    Class: "garage",
-    Title: "Garage",
-    GarageForm: "form",
-    GarageTitleClass: "garage_title",
-    GaragePages: "garage_pagination",
-    GaragePath: "/garage",
-    Win: "win",
-    GaragePagId: "garagePag",
+    Class: 'garage',
+    Title: 'Garage',
+    GarageForm: 'form',
+    GarageTitleClass: 'garage_title',
+    GaragePages: 'garage_pagination',
+    GaragePath: '/garage',
+    Win: 'win',
+    GaragePagId: 'garagePag',
   };
 
   constructor(id: string) {
     super(id);
     this.api = GarageApi;
+    this.storage = new Storage(Garage.TextObject.Class, obj);
   }
-  private createGarageForm(initClass: string) {
-    const form = document.createElement("form");
-    form.id = "form";
+
+  private static createGarageForm(initClass: string) {
+    const form = document.createElement('form');
+    form.id = 'form';
     form.className = initClass;
-    form.innerHTML = `<div id="create">
-        <input id="createName" class="form__input" type="text"  placeholder="Enter mark car" >
-        <input id="createColor" class="form__color" type="color">
-        <button id="createBtn" class="button btn-1" type="button">CREATE</button>
-    </div>
-    <div id="update">
-        <input id="updateName" class="form__input" type="text" placeholder="Select mark car on page" disabled>
-        <input id="updateColor" class="form__color" type="color">
-        <button id="updateBtn" class="button btn-1" type="button" disabled>UPDATE</button>
-    </div>
-    <div>
-        <button id="raceBtn" class="button btn-1" type="button">RACE</button>
-        <button id="resetBtn"class="button btn-2" type="button" disabled>RESET</button>
-        <button id="generateBtn"class="button btn-1" type="button">GENERATE CARS</button>
-    </div>`;
+    form.innerHTML = formHTML;
     return form;
   }
-  viewWinner() {
-    const title = document.createElement("h2");
+
+  private static viewWinner() {
+    const title = document.createElement('h2');
     title.className = Garage.TextObject.Win;
     title.id = Garage.TextObject.Win;
-    title.style.position = "absolute";
+    title.style.position = 'absolute';
     return title;
   }
+
   async render() {
     const cars = await this.api.getAll();
-    this.container.append(...[
-      this.createGarageForm(Garage.TextObject.GarageForm),
-      this.createTitle(
+    this.container.append(
+      Garage.createGarageForm(Garage.TextObject.GarageForm),
+      Page.createTitle(
         Garage.TextObject.GarageTitleClass,
         Garage.TextObject.Title,
-        cars.length.toString()
+        cars.length.toString(),
       ),
-      this.createPagination(
+      Page.createPagination(
         Garage.TextObject.GaragePages,
         obj,
         Garage.TextObject.Class,
-        Garage.TextObject.GaragePagId
+        Garage.TextObject.GaragePagId,
       ),
-      this.viewWinner(),
-    ])
-    this.container.addEventListener("click", async (e) => await pagListener(e));
+      Garage.viewWinner(),
+    );
+    this.container.addEventListener('click', async (e) => {
+      await pagListener(e);
+    });
     return this.container;
   }
+
   async renderRow() {
-    const [container, response] = [
-      <HTMLElement>document.querySelector(".pagination_rows"),
-      await this.api.getPage(
-        getFromSessionStorage(obj, Garage.TextObject.Class)
-      ),
-    ];
+    const container = <HTMLElement>document.querySelector('.pagination_rows');
+    const response = await this.api.getPage(this.storage.getData());
     for (let i = 0; i < response.data.length; i++) {
       const carRow = new CarRow(response.data[i]);
       container.append(carRow.render());

@@ -1,4 +1,5 @@
-import { getDistance } from "./getDistance";
+import { setTransform } from './setTransform';
+
 export interface IAnimId {
   [key: string]: number;
 }
@@ -8,22 +9,13 @@ export interface ITimeResponse {
   timeSec: number;
 }
 
-export function easeInOut(time: number): number {
-  return 0.5 * (1 - Math.cos(Math.PI * time));
-}
-export let requestId: number = 0;
+export const requestId = 0;
 
 export function startAnimation(
   id: string,
   duration: number,
-  callback = (progress: number) => {
-    const translate = easeInOut(progress) * getDistance(),
-      row: HTMLElement = document.getElementById(`${id}`),
-      car = <HTMLDivElement>row.childNodes[2];
-
-    car.style.transform = `translateX(${translate}px)`;
-  }
-): void {
+  callback = setTransform,
+) {
   let startAnimation: number;
 
   requestAnimationFrame(function animationCar(time: number) {
@@ -33,7 +25,7 @@ export function startAnimation(
 
     const progress = (time - startAnimation) / duration;
 
-    callback(progress);
+    callback(progress, id);
 
     if (progress < 1) {
       animId[id] = requestAnimationFrame(animationCar);

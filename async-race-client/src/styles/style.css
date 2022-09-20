@@ -12,7 +12,9 @@ body {
   color: white;
   background-color: rgb(10, 10, 46);
 }
-
+.ds-none {
+  display: none;
+}
 .container {
   margin: 0 auto;
   width: 100%;
